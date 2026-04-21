@@ -21,10 +21,6 @@ interface NavItem {
         <div class="relative overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-110">
           <img src="https://www.jcislmmidtown.com/assets/images/logo-default.png" alt="Logo" class="h-12 w-auto object-contain">
         </div>
-        <div class="hidden lg:flex items-center space-x-3 border-l border-gray-300 pl-4 h-8">
-          <span class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Powered by</span>
-          <span class="text-sm font-black tracking-tight text-secondary group-hover:text-primary transition-colors">TECHFORGE</span>
-        </div>
       </div>
 
       <!-- Desktop Navigation -->
