@@ -253,94 +253,55 @@ import { Router, RouterModule } from '@angular/router';
           <div class="w-32 sm:w-40 h-1 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto"></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
           
-          <!-- Card 1: Past Presidents (Premium Design) -->
-          <div class="group relative bg-white rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(184,134,11,0.1)] hover:shadow-[0_40px_80px_-15px_rgba(184,134,11,0.2)] transition-all duration-1000 hover:-translate-y-2 card-reveal border border-gray-100 flex flex-col xl:flex-row overflow-hidden min-h-[400px] xl:h-[220px]">
-            <!-- Decorative Accent -->
+          <!-- Card 1: Past Presidents -->
+          <div class="group relative bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(184,134,11,0.1)] hover:shadow-[0_30px_60px_-12px_rgba(184,134,11,0.2)] transition-all duration-700 hover:-translate-y-2 card-reveal border border-gray-100 flex flex-col md:flex-row overflow-hidden">
             <div class="absolute top-0 left-0 w-1.5 h-full bg-[#b8860b]"></div>
             
-            <!-- Image Section -->
-            <div class="w-full xl:w-[35%] h-48 xl:h-full relative overflow-hidden bg-[#faf7f2] flex items-center justify-center p-4">
-              <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-[#b8860b]/10 rounded-full blur-2xl"></div>
-              <img src="assets/image/past_presidents_new (2).png" 
-                   alt="Past Presidents" 
-                   class="relative z-10 w-full h-full object-contain transition-all duration-1000 group-hover:scale-110 group-hover:rotate-2">
+            <div class="w-full md:w-[30%] h-48 md:h-auto relative overflow-hidden bg-[#faf7f2] flex items-center justify-center p-2">
+              <img src="assets/image/past_presidents_new (2).png" alt="Past Presidents" class="relative z-10 w-full h-full object-contain transition-transform duration-700 scale-125 group-hover:scale-[1.35]">
             </div>
 
-            <!-- Content Section -->
-            <div class="w-full xl:w-[65%] p-6 sm:p-8 flex flex-col justify-center relative">
-              <div class="flex items-center space-x-3 mb-4">
-                <span class="px-3 py-1 rounded-full bg-[#b8860b]/10 text-[#b8860b] font-black text-[10px] tracking-widest uppercase">Since 1981</span>
-                <div class="h-[1px] flex-1 bg-gray-100"></div>
+            <div class="w-full md:w-[70%] p-6 sm:p-8 flex flex-col">
+              <div class="flex items-center space-x-3 mb-3">
+                <span class="px-3 py-1 rounded-full bg-[#b8860b]/10 text-[#b8860b] font-black text-[9px] tracking-widest uppercase">Legacy Since 1981</span>
+                <div class="h-px flex-1 bg-gray-100"></div>
               </div>
-              
-              <h3 class="text-2xl font-black text-[#1a202c] mb-3 uppercase tracking-tighter leading-none group-hover:text-[#b8860b] transition-colors">
-                Past <span class="text-[#b8860b]">Presidents</span>
-              </h3>
-              
-              <p class="text-[#4a5568] text-[15px] sm:text-[16px] leading-relaxed mb-6 font-medium italic relative">
-                <i class="fas fa-quote-left absolute -left-4 -top-2 opacity-10 text-3xl"></i>
-                A special thank you to <span class="font-bold text-[#1a202c] not-italic">JC. S. A. P. Angam Sir</span> and our visionary leaders since 1981.
-              </p>
-
-              <div class="flex items-center justify-between mt-auto">
-                <a routerLink="/about" class="inline-flex items-center space-x-3 text-[#1a202c] font-black text-[11px] tracking-[0.2em] uppercase group/btn">
-                  <span class="relative">
-                    Read more
-                    <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-[#b8860b] scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left"></span>
-                  </span>
-                  <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover/btn:bg-[#b8860b] group-hover/btn:border-[#b8860b] group-hover/btn:text-white transition-all">
-                    <i class="fas fa-arrow-right text-[10px]"></i>
-                  </div>
+              <h3 class="text-2xl font-black text-[#1a202c] mb-2 uppercase tracking-tighter group-hover:text-[#b8860b] transition-colors">Past <span class="text-[#b8860b]">Presidents</span></h3>
+              <p class="text-[#4a5568] text-sm leading-relaxed mb-6 font-medium">A special thank you to <span class="font-bold text-[#1a202c]">JC. S. A. P. Angam Sir</span> and all visionary leaders who shaped our chapter's excellence.</p>
+              <div class="mt-auto">
+                <a routerLink="/about" class="inline-flex items-center space-x-2 text-[#1a202c] font-black text-[10px] tracking-widest uppercase group/btn">
+                  <span>View Legacy</span>
+                  <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Card 2: Office Bearers (Premium Design) -->
-          <div class="group relative bg-white rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(15,76,117,0.1)] hover:shadow-[0_40px_80px_-15px_rgba(15,76,117,0.2)] transition-all duration-1000 hover:-translate-y-2 card-reveal border border-gray-100 flex flex-col xl:flex-row overflow-hidden min-h-[400px] xl:h-[220px]">
-            <!-- Decorative Accent -->
+          <!-- Card 2: Office Bearers -->
+          <div class="group relative bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(15,76,117,0.1)] hover:shadow-[0_30px_60px_-12px_rgba(15,76,117,0.2)] transition-all duration-700 hover:-translate-y-2 card-reveal border border-gray-100 flex flex-col md:flex-row overflow-hidden">
             <div class="absolute top-0 left-0 w-1.5 h-full bg-[#0f4c75]"></div>
 
-            <!-- Image Section -->
-            <div class="w-full xl:w-[35%] h-48 xl:h-full relative overflow-hidden bg-[#f5f7fa] flex items-center justify-center p-4">
-              <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-[#0f4c75]/10 rounded-full blur-2xl"></div>
-              <img src="assets/image/office_bearers_new (1).png" 
-                   alt="Office Bearers" 
-                   class="relative z-10 w-full h-full object-contain transition-all duration-1000 group-hover:scale-110 group-hover:-rotate-2">
+            <div class="w-full md:w-[30%] h-48 md:h-auto relative overflow-hidden bg-[#f5f7fa] flex items-center justify-center p-2">
+              <img src="assets/image/office_bearers_new (1).png" alt="Office Bearers" class="relative z-10 w-full h-full object-contain transition-transform duration-700 scale-125 group-hover:scale-[1.35]">
             </div>
 
-            <!-- Content Section -->
-            <div class="w-full xl:w-[65%] p-6 sm:p-8 flex flex-col justify-center relative">
-              <div class="flex items-center space-x-3 mb-4">
-                <span class="px-3 py-1 rounded-full bg-[#0f4c75]/10 text-[#0f4c75] font-black text-[10px] tracking-widest uppercase">Active Team</span>
-                <div class="h-[1px] flex-1 bg-gray-100"></div>
+            <div class="w-full md:w-[70%] p-6 sm:p-8 flex flex-col">
+              <div class="flex items-center space-x-3 mb-3">
+                <span class="px-3 py-1 rounded-full bg-[#0f4c75]/10 text-[#0f4c75] font-black text-[9px] tracking-widest uppercase">Active Leadership</span>
+                <div class="h-px flex-1 bg-gray-100"></div>
               </div>
-              
-              <h3 class="text-2xl font-black text-[#1a202c] mb-3 uppercase tracking-tighter leading-none group-hover:text-[#0f4c75] transition-colors">
-                Office <span class="text-[#0f4c75]">Bearers</span>
-              </h3>
-              
-              <p class="text-[#4a5568] text-[15px] sm:text-[16px] leading-relaxed mb-6 font-medium italic relative">
-                <i class="fas fa-quote-left absolute -left-4 -top-2 opacity-10 text-3xl"></i>
-                A sincere thank you to all our office bearers for their hard work and tireless efforts.
-              </p>
-
-              <div class="flex items-center justify-between mt-auto">
-                <a routerLink="/about" class="inline-flex items-center space-x-3 text-[#1a202c] font-black text-[11px] tracking-[0.2em] uppercase group/btn">
-                  <span class="relative">
-                    Read more
-                    <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-[#0f4c75] scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left"></span>
-                  </span>
-                  <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center group-hover/btn:bg-[#0f4c75] group-hover/btn:border-[#0f4c75] group-hover/btn:text-white transition-all">
-                    <i class="fas fa-users text-[10px]"></i>
-                  </div>
+              <h3 class="text-2xl font-black text-[#1a202c] mb-2 uppercase tracking-tighter group-hover:text-[#0f4c75] transition-colors">Office <span class="text-[#0f4c75]">Bearers</span></h3>
+              <p class="text-[#4a5568] text-sm leading-relaxed mb-6 font-medium">Heartfelt gratitude to our dedicated team of office bearers for their tireless efforts in driving our mission forward.</p>
+              <div class="mt-auto">
+                <a routerLink="/about" class="inline-flex items-center space-x-2 text-[#1a202c] font-black text-[10px] tracking-widest uppercase group/btn">
+                  <span>Meet the Team</span>
+                  <i class="fas fa-users text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                 </a>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
