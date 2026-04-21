@@ -130,17 +130,21 @@ import { Router, RouterModule } from '@angular/router';
           </div>
         </div>
 
-        <!-- Video Content (Right) -->
+        <!-- Image Content (Right) -->
         <div class="reveal-right order-1 lg:order-2 px-2">
           <div class="relative group perspective-container">
             <div class="absolute -inset-4 sm:-inset-8 bg-gradient-to-tr from-primary to-secondary opacity-20 blur-[40px] sm:blur-[80px] group-hover:opacity-40 transition-opacity duration-1000"></div>
             <div class="relative rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] border-white bg-black transform hover:-rotate-y-6 transition-all duration-700 h-[60vh] sm:h-[80vh] lg:h-[90vh]">
-              <iframe src="https://www.instagram.com/reel/DC0ekacSsx5/embed" 
-                      class="w-full h-full border-none scale-105" 
-                      frameborder="0" 
-                      scrolling="no" 
-                      allowtransparency="true"
-                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+              <img src="https://images.unsplash.com/photo-1499209974431-966ce4581a5b?w=3840&q=100" 
+                   alt="JCI Community Service and Leadership Impact" 
+                   class="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+              <div class="absolute bottom-8 left-8 right-8 text-white">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                  <h4 class="text-2xl font-bold mb-2">Empowering Leaders</h4>
+                  <p class="text-white/90">Building tomorrow's leaders through action and impact</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
