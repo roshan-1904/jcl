@@ -184,21 +184,26 @@ export class AppComponent implements OnInit, OnDestroy {
   private onDrag(event: MouseEvent | TouchEvent) {
     if (!this.isDragging || !isPlatformBrowser(this.platformId)) return;
 
+    // Use a more reliable way to find the progress bar container
     const progressBar = document.querySelector('.fixed.right-4.top-1/2') as HTMLElement;
     if (!progressBar) return;
 
     const clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
     const rect = progressBar.getBoundingClientRect();
-    const y = clientY - rect.top;
-    let percentage = (y / rect.height) * 100;
     
-    percentage = Math.max(0, Math.min(100, percentage));
+    // Calculate relative Y within the bar (0 to 1)
+    let relativeY = (clientY - rect.top) / rect.height;
+    
+    // Clamp between 0 and 1
+    relativeY = Math.max(0, Math.min(1, relativeY));
     
     const fullHeight = document.documentElement.scrollHeight;
     const windowHeight = window.innerHeight;
-    const scrollTarget = (percentage / 100) * (fullHeight - windowHeight);
+    const totalScrollable = fullHeight - windowHeight;
+    const scrollTarget = relativeY * totalScrollable;
 
     if (this.lenis) {
+      // Use scrollTo with immediate: true for real-time dragging feel
       this.lenis.scrollTo(scrollTarget, { immediate: true });
     } else {
       window.scrollTo(0, scrollTarget);

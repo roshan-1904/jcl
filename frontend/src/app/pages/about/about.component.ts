@@ -138,82 +138,84 @@ import { ScrollReveal } from '../../utils/scroll-reveal';
             </div>
           </div>
 
-          <div class="mt-24 max-w-3xl mx-auto p-12 bg-[#0f172a] rounded-[4rem] text-white shadow-[0_50px_100px_rgba(0,0,0,0.3)] reveal-up text-center relative overflow-hidden group border border-white/5">
-            <div class="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-700"></div>
-            <div class="relative z-10">
-              <div class="inline-block p-4 bg-white/5 rounded-3xl mb-6"><i class="fas fa-calendar-star text-4xl text-primary"></i></div>
-              <p class="text-xs font-black uppercase tracking-[0.4em] text-primary mb-4">Upcoming Major Event</p>
-              <h4 class="text-4xl md:text-5xl font-black mb-4 tracking-tighter">MIDCON 2026</h4>
-              <p class="text-xl text-white/60 font-medium">May 10, 2026 • Anjali Mahal, Athanur</p>
-              <div class="mt-10 flex justify-center">
-                <div class="px-8 py-3 rounded-full border border-white/10 bg-white/5 text-xs font-black uppercase tracking-widest group-hover:border-primary transition-colors">Mark Your Calendar</div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
-      <!-- SECTION 4: PRESIDENTS OF MIDTOWN (Premium Dark/Gold Theme) -->
-      <section class="relative py-32 px-6 bg-[#020617] overflow-hidden">
+      <!-- SECTION 4: PRESIDENTS OF MIDTOWN (Sky Blue & Professional Theme) -->
+      <section class="relative py-32 px-6 bg-slate-50 overflow-hidden">
         <!-- Background Decoration -->
         <div class="absolute inset-0 z-0">
-          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(212,175,55,0.05)_0%,_transparent_70%)]"></div>
-          <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgwem0yMCAyMGMtMS4xIDAtMi0uOS0yLTJzLjktMiAyLTIgMiAuOSAyIDIgLS45IDItMiAyeiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjA1Ii8+PC9zdmc+')]"></div>
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(14,165,233,0.05)_0%,_transparent_70%)]"></div>
+          <div class="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgwem0yMCAyMGMtMS4xIDAtMi0uOS0yLTJzLjktMiAyLTIgMiAuOSAyIDIgLS45IDItMiAyeiIgZmlsbD0iIzBlYTVlOSIgZmlsbC1vcGFjaXR5PSIxIi8+PC9zdmc+')]"></div>
         </div>
 
         <div class="max-w-7xl mx-auto relative z-10">
           <!-- Section Divider -->
           <div class="flex items-center justify-center mb-24 reveal-up">
-            <div class="h-px w-24 bg-gradient-to-r from-transparent to-[#d4af37]"></div>
-            <div class="mx-6 w-3 h-3 rotate-45 border border-[#d4af37]"></div>
-            <h2 class="text-4xl md:text-6xl font-black text-white tracking-tighter text-center mx-4">
-              Presidents of <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#bf953f] via-[#fcf6ba] to-[#aa771c]">Midtown</span>
+            <div class="h-px w-24 bg-gradient-to-r from-transparent to-primary"></div>
+            <div class="mx-6 w-3 h-3 rotate-45 border border-primary"></div>
+            <h2 class="text-4xl md:text-6xl font-black text-secondary tracking-tighter text-center mx-4">
+              Presidents of <span class="gradient-text">Midtown</span>
             </h2>
-            <div class="mx-6 w-3 h-3 rotate-45 border border-[#d4af37]"></div>
-            <div class="h-px w-24 bg-gradient-to-l from-transparent to-[#d4af37]"></div>
+            <div class="mx-6 w-3 h-3 rotate-45 border border-primary"></div>
+            <div class="h-px w-24 bg-gradient-to-l from-transparent to-primary"></div>
           </div>
 
           <!-- Responsive Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
             @for (p of presidents; track p.name; let i = $index) {
-              <div class="group relative p-8 rounded-[2.5rem] bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-500 hover:-translate-y-3 hover:bg-white/10 hover:border-[#d4af37]/50 hover:shadow-[0_20px_60px_rgba(212,175,55,0.1)] card-reveal" [style.transition-delay]="(i % 4) * 100 + 'ms'">
+              <div class="group relative p-10 rounded-[3.5rem] bg-white border border-slate-100 transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_40px_80px_rgba(14,165,233,0.12)] card-reveal overflow-hidden">
                 
-                <!-- Circular Profile Image (AI Generated Style) -->
-                <div class="relative w-28 h-28 mx-auto mb-6">
-                  <div class="absolute -inset-2 rounded-full border border-[#d4af37]/20 group-hover:border-[#d4af37]/40 transition-colors animate-spin-slow"></div>
-                  <div class="w-full h-full rounded-full p-1.5 bg-gradient-to-tr from-[#bf953f] to-[#aa771c] shadow-2xl">
-                    <div class="w-full h-full rounded-full overflow-hidden border-2 border-[#020617] bg-slate-800">
-                      <!-- 
-                        Prompt: Generate a professional portrait of an Indian business leader, 
-                        wearing formal suit, confident expression, soft lighting, 
-                        blurred dark background, ultra realistic, 4k 
-                      -->
-                      <img [src]="'https://i.pravatar.cc/150?u=' + p.name" 
+                <!-- Decorative background blob -->
+                <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-700"></div>
+
+                <!-- Profile Image Container -->
+                <div class="relative w-48 h-48 mx-auto mb-8 z-10">
+                  <!-- Premium outer glow -->
+                  <div class="absolute -inset-4 rounded-[3.5rem] bg-primary/5 group-hover:bg-primary/10 blur-2xl transition-all duration-700"></div>
+                  
+                  <!-- Main Image Holder -->
+                  <div class="w-full h-full rounded-[3rem] p-1 bg-gradient-to-tr from-primary via-sky-300 to-secondary shadow-[0_20px_50px_rgba(14,165,233,0.3)] overflow-hidden transform group-hover:scale-105 transition-transform duration-700">
+                    <div class="w-full h-full rounded-[2.8rem] overflow-hidden border-[6px] border-white bg-white">
+                      <img [src]="'https://i.pravatar.cc/400?u=' + p.name" 
                            [alt]="p.name" 
-                           class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
+                           class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110">
                     </div>
+                  </div>
+
+                  <!-- Year Badge overlay -->
+                  <div class="absolute -bottom-2 -right-2 bg-secondary text-white px-4 py-1.5 rounded-2xl text-[10px] font-black tracking-widest shadow-xl border-2 border-white z-20 group-hover:bg-primary transition-colors">
+                    {{ p.year }}
                   </div>
                 </div>
 
                 <!-- Content -->
-                <div class="text-center">
-                  <h3 class="text-xl font-black text-white mb-2 tracking-tight group-hover:text-[#fcf6ba] transition-colors">{{ p.name }}</h3>
-                  <p class="text-[#d4af37] font-bold text-sm tracking-widest mb-4">{{ p.year }}</p>
+                <div class="text-center relative z-10">
+                  <h3 class="text-2xl font-black text-secondary mb-4 tracking-tight group-hover:text-primary transition-colors duration-500">{{ p.name }}</h3>
+                  
+                  <div class="flex justify-center items-center space-x-2 mb-6">
+                    <div class="h-px w-8 bg-slate-200"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary/20"></div>
+                    <div class="h-px w-8 bg-slate-200"></div>
+                  </div>
                   
                   <!-- Status Badges -->
                   @if (p.status === 'Deceased') {
-                    <span class="inline-block px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[8px] font-black uppercase tracking-widest">
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-red-50/80 border border-red-100 text-red-500 text-[9px] font-black uppercase tracking-widest shadow-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-2 animate-pulse"></span>
                       Deceased
                     </span>
                   } @else if (p.status === 'Left') {
-                    <span class="inline-block px-3 py-1 rounded-full bg-slate-500/10 border border-slate-500/20 text-slate-400 text-[8px] font-black uppercase tracking-widest">
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-slate-50 border border-slate-100 text-slate-400 text-[9px] font-black uppercase tracking-widest">
                       Left
+                    </span>
+                  } @else {
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-50/80 border border-emerald-100 text-emerald-600 text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
+                      Active Member
                     </span>
                   }
                 </div>
-
-                <!-- Subtle Glow Border on Hover -->
-                <div class="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-[#d4af37]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
               </div>
             }
           </div>
@@ -305,50 +307,50 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
   private mouseMoveHandler?: (e: MouseEvent) => void;
 
   presidents = [
-    { name: "Jc. Angannan", year: "1981-82", status: "Deceased" },
-    { name: "Jc. Rajukinger", year: "1983", status: "Deceased" },
-    { name: "Jc. Palanisamy", year: "1984", status: "Deceased" },
-    { name: "Jc. Murugan", year: "1985" },
-    { name: "Jc. Thulasidas", year: "1986" },
-    { name: "Jc. Ethiraj", year: "1987" },
-    { name: "Jc. Raja", year: "1988", status: "Deceased" },
-    { name: "Jc. Eswaran", year: "1989" },
-    { name: "Jc. Ramamoorthy", year: "1990" },
-    { name: "Jc. Seralathan", year: "1991" },
-    { name: "Jc. Ravivarma", year: "1992" },
-    { name: "Jc. Kannan", year: "1993" },
-    { name: "Jc. Rangasamy", year: "1994" },
-    { name: "Jc. Vijayakumar", year: "1995" },
-    { name: "Jc. Kanna", year: "1996", status: "Left" },
-    { name: "Jc. Ramesh Babu", year: "1997", status: "Left" },
-    { name: "Jc. Veeramani", year: "1998", status: "Deceased" },
-    { name: "Jc. Kishore Kumar", year: "1999" },
-    { name: "Jc. Radhakrishnan", year: "2000" },
-    { name: "Jc. Singh", year: "2001", status: "Deceased" },
-    { name: "Jc. Umapathi", year: "2002" },
-    { name: "Jc. Viswanathan", year: "2003" },
-    { name: "Jc. Sivakumar", year: "2004", status: "Deceased" },
-    { name: "Jc. Badrinarayanan", year: "2005" },
-    { name: "Jc. Rangachari", year: "2006" },
-    { name: "Jc. Anandharaman", year: "2007" },
-    { name: "Jc. Bhuvaneshwari Kishore", year: "2008" },
-    { name: "Jc. Venkateshbabu", year: "2009" },
-    { name: "Jc. Mohanasundram", year: "2010" },
-    { name: "Jc. Prakadhmohan", year: "2011" },
-    { name: "Jc. Dhamodharan", year: "2012" },
-    { name: "Jc. Jhothikrishna", year: "2013" },
-    { name: "Jc. Narayanan", year: "2014" },
-    { name: "Jc. Rojesh", year: "2015" },
-    { name: "Jc. Babu Rangarajan", year: "2016" },
-    { name: "Jc. Sabarinathan", year: "2017" },
-    { name: "Jc. Vinoth", year: "2018" },
-    { name: "Jc. Mohanraj", year: "2019" },
-    { name: "Jc. Karthick", year: "2020" },
-    { name: "Jc. Munivel", year: "2021" },
-    { name: "Jc. Karunamirdhan", year: "2022" },
-    { name: "Jc. Suresh Kumar", year: "2023" },
+    { name: "Jc. Ashok", year: "2026" },
     { name: "Jc. Satyanarayanan", year: "2024" },
-    { name: "Jc. Ashok", year: "2026" }
+    { name: "Jc. Suresh Kumar", year: "2023" },
+    { name: "Jc. Karunamirdhan", year: "2022" },
+    { name: "Jc. Munivel", year: "2021" },
+    { name: "Jc. Karthick", year: "2020" },
+    { name: "Jc. Mohanraj", year: "2019" },
+    { name: "Jc. Vinoth", year: "2018" },
+    { name: "Jc. Sabarinathan", year: "2017" },
+    { name: "Jc. Babu Rangarajan", year: "2016" },
+    { name: "Jc. Rojesh", year: "2015" },
+    { name: "Jc. Narayanan", year: "2014" },
+    { name: "Jc. Jhothikrishna", year: "2013" },
+    { name: "Jc. Dhamodharan", year: "2012" },
+    { name: "Jc. Prakadhmohan", year: "2011" },
+    { name: "Jc. Mohanasundram", year: "2010" },
+    { name: "Jc. Venkateshbabu", year: "2009" },
+    { name: "Jc. Bhuvaneshwari Kishore", year: "2008" },
+    { name: "Jc. Anandharaman", year: "2007" },
+    { name: "Jc. Rangachari", year: "2006" },
+    { name: "Jc. Badrinarayanan", year: "2005" },
+    { name: "Jc. Sivakumar", year: "2004", status: "Deceased" },
+    { name: "Jc. Viswanathan", year: "2003" },
+    { name: "Jc. Umapathi", year: "2002" },
+    { name: "Jc. Singh", year: "2001", status: "Deceased" },
+    { name: "Jc. Radhakrishnan", year: "2000" },
+    { name: "Jc. Kishore Kumar", year: "1999" },
+    { name: "Jc. Veeramani", year: "1998", status: "Deceased" },
+    { name: "Jc. Ramesh Babu", year: "1997", status: "Left" },
+    { name: "Jc. Kanna", year: "1996", status: "Left" },
+    { name: "Jc. Vijayakumar", year: "1995" },
+    { name: "Jc. Rangasamy", year: "1994" },
+    { name: "Jc. Kannan", year: "1993" },
+    { name: "Jc. Ravivarma", year: "1992" },
+    { name: "Jc. Seralathan", year: "1991" },
+    { name: "Jc. Ramamoorthy", year: "1990" },
+    { name: "Jc. Eswaran", year: "1989" },
+    { name: "Jc. Raja", year: "1988", status: "Deceased" },
+    { name: "Jc. Ethiraj", year: "1987" },
+    { name: "Jc. Thulasidas", year: "1986" },
+    { name: "Jc. Murugan", year: "1985" },
+    { name: "Jc. Palanisamy", year: "1984", status: "Deceased" },
+    { name: "Jc. Rajukinger", year: "1983", status: "Deceased" },
+    { name: "Jc. Angannan", year: "1981-82", status: "Deceased" }
   ];
 
   opportunities = [
@@ -399,7 +401,7 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
     
     const cards = document.querySelectorAll('.card-reveal');
     cards.forEach((card, index) => {
-      ScrollReveal.reveal(card as HTMLElement, 'up', index * 0.15);
+      ScrollReveal.reveal(card as HTMLElement, 'up', index * 0.05);
     });
 
     // MOUSE PARALLAX EFFECT
