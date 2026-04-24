@@ -429,7 +429,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   activities = [
-    { text: 'Tree Plantation: Greening our community through massive sapling drives and environmental awareness.', image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2013&auto=format&fit=crop' },
+    { text: 'Leadership Conference: Empowering young leaders to create lasting impact through networking and collaboration.', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=2070&auto=format&fit=crop' },
     { text: 'Empowering Education: Supporting underprivileged children with books, study materials and tutoring.', image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop' },
     { text: 'Leadership Workshops: Developing future leaders through intensive training and mentorship programs.', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop' },
     { text: 'Community Welfare: Actively participating in local growth and humanitarian aid projects.', image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop' }
