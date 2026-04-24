@@ -135,7 +135,7 @@ import { Router, RouterModule } from '@angular/router';
           <div class="relative group perspective-container">
             <div class="absolute -inset-4 sm:-inset-8 bg-gradient-to-tr from-primary to-secondary opacity-20 blur-[40px] sm:blur-[80px] group-hover:opacity-40 transition-opacity duration-1000"></div>
             <div class="relative rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] border-white bg-black transform hover:-rotate-y-6 transition-all duration-700 h-[60vh] sm:h-[80vh] lg:h-[90vh]">
-              <img src="https://images.unsplash.com/photo-1499209974431-966ce4581a5b?w=3840&q=100" 
+              <img src="https://deshbhagatuniversity.in/wp-content/uploads/2024/07/network-concept-ai-generated-image-1024x683.jpg" 
                    alt="JCI Community Service and Leadership Impact" 
                    class="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700">
               <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
