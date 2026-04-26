@@ -2,11 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Set DNS servers to Google's to ensure SRV records can be resolved
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(express.json());
@@ -14,21 +18,17 @@ app.use(express.json());
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/jcislmmidtown';
 
-mongoose.connect(MONGO_URI, {
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-})
+mongoose.connect(MONGO_URI)
   .then(() => {
-    console.log('Successfully connected to MongoDB Atlas');
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    console.log('Successfully connected to MongoDB');
   })
   .catch((err) => {
-    console.error('CRITICAL: MongoDB connection error details:');
-    console.error('Code:', err.code);
-    console.error('Reason:', err.message);
-    process.exit(1); // Stop server if DB fails
+    console.error('WARNING: MongoDB connection failed:', err.message);
   });
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 // Event Schema
 const eventSchema = new mongoose.Schema({
@@ -74,8 +74,20 @@ const ADMIN_CREDENTIALS = {
   password: process.env.ADMIN_PASSWORD || 'jcl&123'
 };
 
+// Middleware to check DB connection
+const checkDbConnection = (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ 
+      message: 'Database connection is currently offline. Please verify your MongoDB configuration.',
+      status: 'offline'
+    });
+  }
+  next();
+};
+
 app.get('/', (req, res) => {
-  res.send('JC Demo Backend v2.0 (with Team Members) is running...');
+  const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
+  res.send(`JC Demo Backend is running. Database Status: ${dbStatus}`);
 });
 
 // Auth endpoint
@@ -89,7 +101,7 @@ app.post('/api/login', (req, res) => {
 });
 
 // Events endpoints
-app.get('/api/events', async (req, res) => {
+app.get('/api/events', checkDbConnection, async (req, res) => {
   try {
     const events = await Event.find().sort({ createdAt: -1 });
     res.json(events);
@@ -127,7 +139,7 @@ app.delete('/api/events/:id', async (req, res) => {
 });
 
 // Team Members endpoints
-app.get('/api/members', async (req, res) => {
+app.get('/api/members', checkDbConnection, async (req, res) => {
   try {
     const members = await TeamMember.find().sort({ order: 1, createdAt: -1 });
     res.json(members);
@@ -165,7 +177,7 @@ app.delete('/api/members/:id', async (req, res) => {
 });
 
 // Enquiry endpoints
-app.get('/api/enquiries', async (req, res) => {
+app.get('/api/enquiries', checkDbConnection, async (req, res) => {
   try {
     const enquiries = await Enquiry.find().sort({ createdAt: -1 });
     res.json(enquiries);
