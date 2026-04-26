@@ -14,14 +14,21 @@ app.use(express.json());
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/jcislmmidtown';
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+})
   .then(() => {
-    console.log('Successfully connected to MongoDB');
+    console.log('Successfully connected to MongoDB Atlas');
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   })
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .catch((err) => {
+    console.error('CRITICAL: MongoDB connection error details:');
+    console.error('Code:', err.code);
+    console.error('Reason:', err.message);
+    process.exit(1); // Stop server if DB fails
+  });
 
 // Event Schema
 const eventSchema = new mongoose.Schema({
