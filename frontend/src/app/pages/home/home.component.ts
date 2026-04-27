@@ -16,7 +16,7 @@ import { Router, RouterModule } from '@angular/router';
     <!-- CINEMATIC ADVANCED HERO SECTION -->
     <section class="relative min-h-[100svh] flex flex-col items-center justify-center pt-24 md:pt-28 overflow-hidden">
       <!-- Background Image Slider -->
-      <div class="absolute inset-0 z-[-1]">
+      <div class="absolute inset-0 z-[-1] hero-mesh">
         @for (img of heroImages; track $index) {
           <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
                [class.opacity-100]="currentImageIndex === $index"
@@ -135,7 +135,7 @@ import { Router, RouterModule } from '@angular/router';
           <div class="relative group perspective-container">
             <div class="absolute -inset-4 sm:-inset-8 bg-gradient-to-tr from-primary to-secondary opacity-20 blur-[40px] sm:blur-[80px] group-hover:opacity-40 transition-opacity duration-1000"></div>
             <div class="relative rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] border-white bg-black transform hover:-rotate-y-6 transition-all duration-700 h-[60vh] sm:h-[80vh] lg:h-[90vh]">
-              <img src="https://images.unsplash.com/photo-1499209974431-966ce4581a5b?w=3840&q=100" 
+              <img src="assets/image/ChatGPT Image Apr 21, 2026, 02_19_37 PM.png" 
                    alt="JCI Community Service and Leadership Impact" 
                    class="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700">
               <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
