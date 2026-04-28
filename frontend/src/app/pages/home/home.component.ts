@@ -142,7 +142,7 @@ import { Router, RouterModule } from '@angular/router';
               <div class="absolute bottom-8 left-8 right-8 text-white">
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
                   <h4 class="text-2xl font-bold mb-2">Empowering Leaders</h4>
-                  <p class="text-white/90">Building tomorrow's leaders through action and impact</p>
+                  <p class="text-white/90">Building tomorrows's leaders through action and impact</p>
                 </div>
               </div>
             </div>
