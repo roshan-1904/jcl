@@ -46,12 +46,12 @@ import { Router, RouterModule } from '@angular/router';
                <span class="text-primary font-black tracking-[0.3em] sm:tracking-[0.6em] uppercase text-[9px] sm:text-[11px] glow-text whitespace-nowrap">JCI Salem Midtown • Excellence Redefined</span>
             </div>
 
-            <h1 class="heading-huge mb-6 sm:mb-10 overflow-hidden text-white">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 sm:mb-6 md:mb-8 lg:mb-10 overflow-hidden text-white">
               <span class="block opacity-0 hero-title-line mb-2">Empowering</span>
               <span class="block opacity-0 hero-title-line gradient-text-v2 neon-glow">Global Leaders</span>
             </h1>
 
-            <p class="text-lg sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto mb-10 sm:mb-16 leading-relaxed opacity-0 hero-fade-in font-medium px-4">
+            <p class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-3xl mx-auto mb-6 sm:mb-8 md:mb-10 lg:mb-16 leading-relaxed opacity-0 hero-fade-in font-medium px-4">
               Developing leadership, social responsibility, and entrepreneurship to create <span class="text-white font-bold border-b-2 sm:border-b-4 border-primary/50">positive global change.</span>
             </p>
 
@@ -60,16 +60,16 @@ import { Router, RouterModule } from '@angular/router';
               <div class="p-1.5 sm:p-2 bg-white/5 backdrop-blur-2xl rounded-[2rem] sm:rounded-[3rem] border border-white/10 shadow-2xl flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
                 <button (click)="scrollToEnquiry()" class="group relative px-6 sm:px-10 py-4 sm:py-5 overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] bg-primary font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,198,167,0.3)] hover:shadow-[0_25px_50px_rgba(0,198,167,0.5)] w-full sm:w-auto">
                   <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  <span class="relative z-10 flex items-center justify-center gap-3 text-base sm:text-lg">
-                    <i class="fas fa-rocket text-xs sm:text-sm"></i>
+                  <span class="relative z-10 flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm md:text-base">
+                    <i class="fas fa-rocket text-[8px] sm:text-xs md:text-sm"></i>
                     Join Movement
                   </span>
                 </button>
                 
-                <a routerLink="/about" class="group px-6 sm:px-10 py-4 sm:py-5 rounded-[1.5rem] sm:rounded-[2.5rem] bg-white/10 hover:bg-white text-white hover:text-secondary transition-all duration-500 font-bold backdrop-blur-md flex items-center justify-center gap-3 border border-white/20 w-full sm:w-auto text-base sm:text-lg">
+                <a routerLink="/about" class="group px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-4 md:py-5 rounded-[1rem] sm:rounded-[1.5rem] md:rounded-[2rem] lg:rounded-[2.5rem] bg-white/10 hover:bg-white text-white hover:text-secondary transition-all duration-500 font-bold backdrop-blur-md flex items-center justify-center gap-2 sm:gap-3 border border-white/20 w-full sm:w-auto text-xs sm:text-sm md:text-base">
                   Our Story 
-                  <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 group-hover:bg-secondary/10 flex items-center justify-center transition-colors">
-                    <i class="fas fa-chevron-right text-[10px] sm:text-xs group-hover:translate-x-1 transition-transform"></i>
+                  <span class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-full bg-white/10 group-hover:bg-secondary/10 flex items-center justify-center transition-colors">
+                    <i class="fas fa-chevron-right text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs group-hover:translate-x-1 transition-transform"></i>
                   </span>
                 </a>
               </div>
@@ -106,25 +106,25 @@ import { Router, RouterModule } from '@angular/router';
           <h2 class="text-[10px] sm:text-xs font-black text-primary tracking-[0.3em] sm:tracking-[0.5em] uppercase mb-4 sm:mb-6 flex items-center">
             <span class="w-6 sm:w-8 h-[1px] bg-primary mr-3 sm:mr-4"></span> JCI Salem Midtown
           </h2>
-          <h3 class="text-4xl sm:text-5xl md:text-7xl font-black text-secondary mb-6 sm:mb-8 leading-[1.1] tracking-tighter">
+          <h3 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-secondary mb-4 sm:mb-6 md:mb-8 leading-[1.1] tracking-tighter">
             Leadership <br><span class="gradient-text">Since 1981</span>
           </h3>
-          <p class="text-gray-500 text-lg sm:text-xl mb-8 sm:mb-12 leading-relaxed font-medium">
+          <p class="text-gray-500 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 md:mb-10 lg:mb-12 leading-relaxed font-medium">
             At JCI Salem Mid Town, we are dedicated to empowering young leaders, fostering community development, and driving positive change. Join us in our mission to create a better tomorrow through impactful leadership, innovation, and collaboration.
           </p>
           <div class="space-y-4 sm:space-y-6">
             <div class="group flex items-center space-x-4 sm:space-x-6 bg-white p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-gray-100 hover:shadow-2xl hover:border-primary/20 transition-all duration-500">
-              <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl sm:text-2xl group-hover:scale-110 transition-transform"><i class="fas fa-bolt"></i></div>
+              <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-lg sm:text-xl md:text-2xl group-hover:scale-110 transition-transform"><i class="fas fa-bolt"></i></div>
               <div class="flex-1">
-                <p class="font-black text-secondary text-base sm:text-lg">Impactful Programs</p>
-                <p class="text-gray-400 text-xs sm:text-sm">Empowering through action and education.</p>
+                <p class="font-black text-secondary text-sm sm:text-base md:text-lg">Impactful Programs</p>
+                <p class="text-gray-400 text-[10px] sm:text-xs md:text-sm">Empowering through action and education.</p>
               </div>
             </div>
             <div class="group flex items-center space-x-4 sm:space-x-6 bg-white p-4 sm:p-6 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-gray-100 hover:shadow-2xl hover:border-secondary/20 transition-all duration-500">
-              <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary text-xl sm:text-2xl group-hover:scale-110 transition-transform"><i class="fas fa-globe"></i></div>
+              <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-xl md:rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary text-lg sm:text-xl md:text-2xl group-hover:scale-110 transition-transform"><i class="fas fa-globe"></i></div>
               <div class="flex-1">
-                <p class="font-black text-secondary text-lg">Global Connectivity</p>
-                <p class="text-gray-400 text-xs sm:text-sm">Building bridges across borders.</p>
+                <p class="font-black text-secondary text-sm sm:text-base md:text-lg">Global Connectivity</p>
+                <p class="text-gray-400 text-[10px] sm:text-xs md:text-sm">Building bridges across borders.</p>
               </div>
             </div>
           </div>
@@ -134,15 +134,15 @@ import { Router, RouterModule } from '@angular/router';
         <div class="reveal-right order-1 lg:order-2 px-2">
           <div class="relative group perspective-container">
             <div class="absolute -inset-4 sm:-inset-8 bg-gradient-to-tr from-primary to-secondary opacity-20 blur-[40px] sm:blur-[80px] group-hover:opacity-40 transition-opacity duration-1000"></div>
-            <div class="relative rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] border-white bg-black transform hover:-rotate-y-6 transition-all duration-700 h-[60vh] sm:h-[80vh] lg:h-[90vh]">
+            <div class="relative rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] lg:rounded-[3.5rem] overflow-hidden shadow-2xl border-[4px] sm:border-[8px] md:border-[10px] lg:border-[12px] border-white bg-black transform hover:-rotate-y-6 transition-all duration-700 h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[80vh]">
               <img src="assets/image/ChatGPT Image Apr 21, 2026, 02_19_37 PM.png" 
                    alt="JCI Community Service and Leadership Impact" 
                    class="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-700">
               <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              <div class="absolute bottom-8 left-8 right-8 text-white">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                  <h4 class="text-2xl font-bold mb-2">Empowering Leaders</h4>
-                  <p class="text-white/90">Building tomorrows's leaders through action and impact</p>
+              <div class="absolute bottom-4 sm:bottom-6 md:bottom-8 left-4 right-4 sm:left-6 sm:right-6 md:left-8 md:right-8 text-white">
+                <div class="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 border border-white/20">
+                  <h4 class="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">Empowering Leaders</h4>
+                  <p class="text-white/90 text-xs sm:text-sm md:text-base">Building tomorrow's leaders through action and impact</p>
                 </div>
               </div>
             </div>
@@ -155,21 +155,21 @@ import { Router, RouterModule } from '@angular/router';
     <section class="py-12 sm:py-20 bg-[#fdfdfd] px-4 sm:px-6 relative overflow-hidden section-reveal">
       <div class="max-w-[1600px] mx-auto">
         <div class="text-center mb-10 sm:mb-16 reveal-up">
-          <h2 class="text-4xl sm:text-5xl md:text-7xl font-black text-secondary tracking-tighter">Impactful <span class="gradient-text">Initiatives</span></h2>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-secondary tracking-tighter">Impactful <span class="gradient-text">Initiatives</span></h2>
           <div class="w-20 sm:w-24 h-1.5 sm:h-2 bg-primary mx-auto mt-4 sm:mt-6 rounded-full"></div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 lg:gap-20">
           @for (item of activities; track item.text; let i = $index) {
             <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-8 group reveal-up" [style.transition-delay]="i * 100 + 'ms'">
-              <div class="relative w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
+              <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-32 lg:w-32 lg:h-32 flex-shrink-0 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
                 <img [src]="item.image" [alt]="item.text" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                 <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
               <div class="flex-1 pt-0 sm:pt-2">
-                <p class="text-primary font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] mb-2 sm:mb-3">Initiative {{ i + 1 }}</p>
-                <h4 class="text-secondary font-black text-xl sm:text-2xl mb-2 sm:mb-3 group-hover:text-primary transition-colors leading-tight">{{ item.text.split(':')[0] }}</h4>
-                <p class="text-gray-400 font-medium leading-relaxed text-sm sm:text-base">{{ item.text.split(':')[1] || item.text }}</p>
+                <p class="text-primary font-black text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.2em] mb-2 sm:mb-3">Initiative {{ i + 1 }}</p>
+                <h4 class="text-secondary font-black text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 group-hover:text-primary transition-colors leading-tight">{{ item.text.split(':')[0] }}</h4>
+                <p class="text-gray-400 font-medium leading-relaxed text-xs sm:text-sm md:text-base">{{ item.text.split(':')[1] || item.text }}</p>
               </div>
             </div>
           }
@@ -183,8 +183,8 @@ import { Router, RouterModule } from '@angular/router';
       <div class="absolute top-0 left-1/2 -translate-x-1/2 opacity-[0.02] text-[15rem] font-black pointer-events-none select-none whitespace-nowrap">FOUNDATION</div>
 
       <div class="max-w-[1600px] mx-auto px-4 sm:px-6 text-center mb-10 sm:mb-20">
-        <p class="text-primary font-black tracking-[0.4em] uppercase text-[10px] mb-4">The Foundation of JCI</p>
-        <h2 class="heading-xl text-secondary tracking-tighter">Our Core <span class="gradient-text">Pillars</span></h2>
+        <p class="text-primary font-black tracking-[0.4em] uppercase text-[8px] sm:text-[10px] mb-4">The Foundation of JCI</p>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-secondary tracking-tighter">Our Core <span class="gradient-text">Pillars</span></h2>
         <div class="w-24 sm:w-32 h-1 bg-gradient-to-r from-primary via-secondary to-primary mx-auto mt-6 rounded-full shadow-2xl"></div>
       </div>
       
@@ -200,9 +200,9 @@ import { Router, RouterModule } from '@angular/router';
                 <i class="fas fa-graduation-cap text-4xl"></i>
               </div>
             </div>
-            <h3 class="text-2xl font-black mb-4 text-secondary tracking-tight group-hover:text-primary transition-colors">Leadership</h3>
-            <p class="text-gray-500 leading-relaxed text-lg font-medium">Creating the visionaries and change-makers who will shape the future of our global society.</p>
-            <div class="mt-8 flex items-center text-primary font-black text-[11px] tracking-widest uppercase opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all">
+            <h3 class="text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 md:mb-6 text-secondary tracking-tight group-hover:text-primary transition-colors">Leadership</h3>
+            <p class="text-gray-500 leading-relaxed text-sm sm:text-base md:text-lg">Creating the visionaries and change-makers who will shape the future of our global society.</p>
+            <div class="mt-6 sm:mt-8 flex items-center text-primary font-black text-[9px] sm:text-[10px] md:text-[11px] tracking-widest uppercase opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all">
               Learn Impact <i class="fas fa-arrow-right ml-3"></i>
             </div>
           </div>
@@ -218,8 +218,8 @@ import { Router, RouterModule } from '@angular/router';
                 <i class="fas fa-briefcase text-4xl"></i>
               </div>
             </div>
-            <h3 class="text-2xl font-black mb-4 text-secondary tracking-tight group-hover:text-secondary transition-colors">Business</h3>
-            <p class="text-gray-500 leading-relaxed text-lg font-medium">Connecting entrepreneurs to create a high-performance network of global success and innovation.</p>
+            <h3 class="text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 md:mb-6 text-secondary tracking-tight group-hover:text-secondary transition-colors">Business</h3>
+            <p class="text-gray-500 leading-relaxed text-sm sm:text-base md:text-lg">Connecting entrepreneurs to create a high-performance network of global success and innovation.</p>
             <div class="mt-8 flex items-center text-secondary font-black text-[11px] tracking-widest uppercase opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all">
               Expand Network <i class="fas fa-arrow-right ml-3"></i>
             </div>
@@ -236,9 +236,9 @@ import { Router, RouterModule } from '@angular/router';
                 <i class="fas fa-globe-americas text-4xl"></i>
               </div>
             </div>
-            <h3 class="text-2xl font-black mb-4 text-secondary tracking-tight group-hover:text-primary transition-colors">Community</h3>
-            <p class="text-gray-500 leading-relaxed text-lg font-medium">Building stronger, more resilient communities through sustainable and impactful local action.</p>
-            <div class="mt-8 flex items-center text-primary font-black text-[11px] tracking-widest uppercase opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all">
+            <h3 class="text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 md:mb-6 text-secondary tracking-tight group-hover:text-primary transition-colors">Community</h3>
+            <p class="text-gray-500 leading-relaxed text-sm sm:text-base md:text-lg">Building stronger, more resilient communities through sustainable and impactful local action.</p>
+            <div class="mt-6 sm:mt-8 flex items-center text-primary font-black text-[9px] sm:text-[10px] md:text-[11px] tracking-widest uppercase opacity-0 group-hover:opacity-100 translate-x-[-20px] group-hover:translate-x-0 transition-all">
               Take Action <i class="fas fa-arrow-right ml-3"></i>
             </div>
           </div>
