@@ -15,8 +15,13 @@ const PORT = process.env.PORT || 10000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/jcislmmidtown';
+// MySQL Connection - Use root user to avoid permission issues
+const db = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: 'root',
+  password: '',
+  database: process.env.DB_NAME || 'jci_db'
+});
 
 mongoose.connect(MONGO_URI)
   .then(() => {
@@ -66,8 +71,6 @@ const enquirySchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Enquiry = mongoose.model('Enquiry', enquirySchema);
-
 // Admin Credentials
 const ADMIN_CREDENTIALS = {
   username: process.env.ADMIN_USERNAME || 'jclmidtown',
@@ -90,13 +93,13 @@ app.get('/', (req, res) => {
   res.send(`JC Demo Backend is running. Database Status: ${dbStatus}`);
 });
 
-// Auth endpoint
+// 🔐 Login
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-    res.json({ success: true, message: 'Login successful' });
+    res.json({ success: true });
   } else {
-    res.status(401).json({ success: false, message: 'Invalid credentials' });
+    res.status(401).json({ success: false });
   }
 });
 
@@ -110,70 +113,88 @@ app.get('/api/events', checkDbConnection, async (req, res) => {
   }
 });
 
-app.post('/api/events', async (req, res) => {
-  try {
-    const newEvent = new Event(req.body);
-    const savedEvent = await newEvent.save();
-    res.status(201).json(savedEvent);
-  } catch (err) {
-    res.status(400).json({ message: 'Error saving event', error: err.message });
-  }
+// ================= EVENTS =================
+
+// GET events
+app.get('/api/events', (req, res) => {
+  db.query('SELECT * FROM events ORDER BY createdAt DESC', (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
 });
 
-app.put('/api/events/:id', async (req, res) => {
-  try {
-    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedEvent);
-  } catch (err) {
-    res.status(400).json({ message: 'Error updating event', error: err.message });
-  }
+// POST event
+app.post('/api/events', (req, res) => {
+  const { title, date, time, location, description, type, image } = req.body;
+
+  const sql = `
+    INSERT INTO events (title, date, time, location, description, type, image)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(sql, [title, date, time, location, description, type, image], (err, result) => {
+    if (err) return res.status(400).json(err);
+    res.json({ message: 'Event created', id: result.insertId });
+  });
 });
 
-app.delete('/api/events/:id', async (req, res) => {
-  try {
-    await Event.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Event deleted successfully' });
-  } catch (err) {
-    res.status(400).json({ message: 'Error deleting event', error: err.message });
-  }
+// UPDATE event
+app.put('/api/events/:id', (req, res) => {
+  const { title, date, time, location, description, type, image } = req.body;
+
+  const sql = `
+    UPDATE events SET title=?, date=?, time=?, location=?, description=?, type=?, image=?
+    WHERE id=?
+  `;
+
+  db.query(sql, [title, date, time, location, description, type, image, req.params.id], (err) => {
+    if (err) return res.status(400).json(err);
+    res.json({ message: 'Event updated' });
+  });
 });
 
-// Team Members endpoints
-app.get('/api/members', checkDbConnection, async (req, res) => {
-  try {
-    const members = await TeamMember.find().sort({ order: 1, createdAt: -1 });
-    res.json(members);
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching members', error: err.message });
-  }
+// DELETE event
+app.delete('/api/events/:id', (req, res) => {
+  db.query('DELETE FROM events WHERE id=?', [req.params.id], (err) => {
+    if (err) return res.status(400).json(err);
+    res.json({ message: 'Event deleted' });
+  });
 });
 
-app.post('/api/members', async (req, res) => {
-  try {
-    const newMember = new TeamMember(req.body);
-    const savedMember = await newMember.save();
-    res.status(201).json(savedMember);
-  } catch (err) {
-    res.status(400).json({ message: 'Error saving member', error: err.message });
-  }
+
+// ================= MEMBERS =================
+
+app.get('/api/members', (req, res) => {
+  db.query('SELECT * FROM members ORDER BY display_order ASC', (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
 });
 
-app.put('/api/members/:id', async (req, res) => {
-  try {
-    const updatedMember = await TeamMember.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedMember);
-  } catch (err) {
-    res.status(400).json({ message: 'Error updating member', error: err.message });
-  }
+app.post('/api/members', (req, res) => {
+  const { name, role, bio, image, display_order } = req.body;
+
+  db.query(
+    'INSERT INTO members (name, role, bio, image, display_order) VALUES (?, ?, ?, ?, ?)',
+    [name, role, bio, image, display_order || 0],
+    (err, result) => {
+      if (err) return res.status(400).json(err);
+      res.json({ message: 'Member added', id: result.insertId });
+    }
+  );
 });
 
-app.delete('/api/members/:id', async (req, res) => {
-  try {
-    await TeamMember.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Member deleted successfully' });
-  } catch (err) {
-    res.status(400).json({ message: 'Error deleting member', error: err.message });
-  }
+app.put('/api/members/:id', (req, res) => {
+  const { name, role, bio, image, display_order } = req.body;
+
+  db.query(
+    'UPDATE members SET name=?, role=?, bio=?, image=?, display_order=? WHERE id=?',
+    [name, role, bio, image, display_order, req.params.id],
+    (err) => {
+      if (err) return res.status(400).json(err);
+      res.json({ message: 'Member updated' });
+    }
+  );
 });
 
 // Enquiry endpoints
@@ -186,21 +207,32 @@ app.get('/api/enquiries', checkDbConnection, async (req, res) => {
   }
 });
 
-app.post('/api/enquiries', async (req, res) => {
-  try {
-    const newEnquiry = new Enquiry(req.body);
-    const savedEnquiry = await newEnquiry.save();
-    res.status(201).json(savedEnquiry);
-  } catch (err) {
-    res.status(400).json({ message: 'Error saving enquiry', error: err.message });
-  }
+
+// ================= ENQUIRIES =================
+
+app.get('/api/enquiries', (req, res) => {
+  db.query('SELECT * FROM enquiries ORDER BY createdAt DESC', (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
 });
 
-app.delete('/api/enquiries/:id', async (req, res) => {
-  try {
-    await Enquiry.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Enquiry deleted successfully' });
-  } catch (err) {
-    res.status(400).json({ message: 'Error deleting enquiry', error: err.message });
-  }
+app.post('/api/enquiries', (req, res) => {
+  const { name, email, phone, location, message } = req.body;
+
+  db.query(
+    'INSERT INTO enquiries (name, email, phone, location, message) VALUES (?, ?, ?, ?, ?)',
+    [name, email, phone, location, message],
+    (err, result) => {
+      if (err) return res.status(400).json(err);
+      res.json({ message: 'Enquiry saved', id: result.insertId });
+    }
+  );
+});
+
+app.delete('/api/enquiries/:id', (req, res) => {
+  db.query('DELETE FROM enquiries WHERE id=?', [req.params.id], (err) => {
+    if (err) return res.status(400).json(err);
+    res.json({ message: 'Enquiry deleted' });
+  });
 });
