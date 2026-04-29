@@ -1,12 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const sqlite3 = require('sqlite3').verbose();
+const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Set DNS servers to Google's to ensure SRV records can be resolved
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(express.json());
@@ -19,16 +23,52 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME || 'jci_db'
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error(' MySQL connection error:', err);
-  } else {
-    console.log(' Connected to MySQL');
-    console.log('✅ Connected to MySQL');
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  }
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log('Successfully connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('WARNING: MongoDB connection failed:', err.message);
+  });
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Event Schema
+const eventSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  date: { type: String, required: true },
+  time: { type: String, required: true },
+  location: { type: String, required: true },
+  description: { type: String, required: true },
+  type: { type: String, required: true },
+  image: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Event = mongoose.model('Event', eventSchema);
+
+// Team Member Schema
+const teamMemberSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  role: { type: String, required: true },
+  bio: { type: String, required: true },
+  image: { type: String, required: true },
+  order: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const TeamMember = mongoose.model('TeamMember', teamMemberSchema);
+
+// Enquiry Schema
+const enquirySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  location: { type: String, required: true },
+  message: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
 });
 
 // Admin Credentials
@@ -37,8 +77,20 @@ const ADMIN_CREDENTIALS = {
   password: process.env.ADMIN_PASSWORD || 'jcl&123'
 };
 
+// Middleware to check DB connection
+const checkDbConnection = (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ 
+      message: 'Database connection is currently offline. Please verify your MongoDB configuration.',
+      status: 'offline'
+    });
+  }
+  next();
+};
+
 app.get('/', (req, res) => {
-  res.send('JC Demo Backend (MySQL) is running...');
+  const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
+  res.send(`JC Demo Backend is running. Database Status: ${dbStatus}`);
 });
 
 // 🔐 Login
@@ -51,6 +103,15 @@ app.post('/api/login', (req, res) => {
   }
 });
 
+// Events endpoints
+app.get('/api/events', checkDbConnection, async (req, res) => {
+  try {
+    const events = await Event.find().sort({ createdAt: -1 });
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching events', error: err.message });
+  }
+});
 
 // ================= EVENTS =================
 
@@ -136,11 +197,14 @@ app.put('/api/members/:id', (req, res) => {
   );
 });
 
-app.delete('/api/members/:id', (req, res) => {
-  db.query('DELETE FROM members WHERE id=?', [req.params.id], (err) => {
-    if (err) return res.status(400).json(err);
-    res.json({ message: 'Member deleted' });
-  });
+// Enquiry endpoints
+app.get('/api/enquiries', checkDbConnection, async (req, res) => {
+  try {
+    const enquiries = await Enquiry.find().sort({ createdAt: -1 });
+    res.json(enquiries);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching enquiries', error: err.message });
+  }
 });
 
 
