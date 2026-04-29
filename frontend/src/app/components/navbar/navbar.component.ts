@@ -104,7 +104,7 @@ export class NavbarComponent {
   navItems: NavItem[] = [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
-    { label: 'Legacy', path: '/', fragment: 'legacy' },
+    { label: 'Legacy', path: '/legacy' },
     { label: 'Team', path: '/members' },
     { label: 'Business', path: '/portfolio' },
     { label: 'Events', path: '/events' },

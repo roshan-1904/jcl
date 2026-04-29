@@ -162,7 +162,7 @@ import { Router, RouterModule } from '@angular/router';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 lg:gap-20">
           @for (item of activities; track item.text; let i = $index) {
             <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-8 group reveal-up" [style.transition-delay]="i * 100 + 'ms'">
-              <div class="relative w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
+              <div class="relative w-[126px] h-[126px] sm:w-32 sm:h-32 flex-shrink-0 rounded-full overflow-hidden shadow-2xl border-4 border-white transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
                 <img [src]="item.image" [alt]="item.text" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                 <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
@@ -275,12 +275,11 @@ import { Router, RouterModule } from '@angular/router';
               <h3 class="text-2xl font-black text-[#1a202c] mb-2 uppercase tracking-tighter group-hover:text-[#b8860b] transition-colors">Past <span class="text-[#b8860b]">Presidents</span></h3>
               <p class="text-[#4a5568] text-sm leading-relaxed mb-6 font-medium">A special thank you to <span class="font-bold text-[#1a202c]">JC. S. A. P. Angam Sir</span> and all visionary leaders who shaped our chapter's excellence.</p>
               <div class="mt-auto">
-                <a routerLink="/about" class="inline-flex items-center space-x-2 text-[#1a202c] font-black text-[10px] tracking-widest uppercase group/btn">
+                <a routerLink="/legacy" class="inline-flex items-center space-x-2 text-[#1a202c] font-black text-[10px] tracking-widest uppercase group/btn">
                   <span>View Legacy</span>
                   <i class="fas fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
                 </a>
-              </div>
-            </div>
+              </div>            </div>
           </div>
 
           <!-- Card 2: Office Bearers -->

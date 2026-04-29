@@ -99,7 +99,7 @@ import { ScrollReveal } from '../../utils/scroll-reveal';
               <ul class="space-y-12">
                 @for (item of activities.slice(0, 2); track item.text) {
                   <li class="flex items-start space-x-8 group">
-                    <div class="w-28 h-28 flex-shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
+                    <div class="w-[126px] h-[126px] flex-shrink-0 rounded-full overflow-hidden shadow-2xl border-4 border-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
                       <img [src]="item.image" [alt]="item.text" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
                     <div class="flex-1 pt-4">
@@ -120,7 +120,7 @@ import { ScrollReveal } from '../../utils/scroll-reveal';
               <ul class="space-y-12">
                 @for (item of activities.slice(2); track item.text) {
                   <li class="flex items-start space-x-8 group">
-                    <div class="w-28 h-28 flex-shrink-0 rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
+                    <div class="w-[126px] h-[126px] flex-shrink-0 rounded-full overflow-hidden shadow-2xl border-4 border-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
                       <img [src]="item.image" [alt]="item.text" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                     </div>
                     <div class="flex-1 pt-4">
@@ -177,7 +177,7 @@ import { ScrollReveal } from '../../utils/scroll-reveal';
                   <!-- Main Image Holder -->
                   <div class="w-full h-full rounded-[3rem] p-1 bg-gradient-to-tr from-primary via-sky-300 to-secondary shadow-[0_20px_50px_rgba(14,165,233,0.3)] overflow-hidden transform group-hover:scale-105 transition-transform duration-700">
                     <div class="w-full h-full rounded-[2.8rem] overflow-hidden border-[6px] border-white bg-white">
-                      <img [src]="'https://i.pravatar.cc/400?u=' + p.name" 
+                      <img [src]="p.image || ('https://i.pravatar.cc/400?u=' + p.name)" 
                            [alt]="p.name" 
                            class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110">
                     </div>
@@ -307,50 +307,23 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
   private mouseMoveHandler?: (e: MouseEvent) => void;
 
   presidents = [
-    { name: "Jc. Ashok", year: "2026" },
-    { name: "Jc. Satyanarayanan", year: "2024" },
-    { name: "Jc. Suresh Kumar", year: "2023" },
-    { name: "Jc. Karunamirdhan", year: "2022" },
-    { name: "Jc. Munivel", year: "2021" },
-    { name: "Jc. Karthick", year: "2020" },
-    { name: "Jc. Mohanraj", year: "2019" },
-    { name: "Jc. Vinoth", year: "2018" },
-    { name: "Jc. Sabarinathan", year: "2017" },
-    { name: "Jc. Babu Rangarajan", year: "2016" },
-    { name: "Jc. Rojesh", year: "2015" },
-    { name: "Jc. Narayanan", year: "2014" },
-    { name: "Jc. Jhothikrishna", year: "2013" },
-    { name: "Jc. Dhamodharan", year: "2012" },
-    { name: "Jc. Prakadhmohan", year: "2011" },
-    { name: "Jc. Mohanasundram", year: "2010" },
-    { name: "Jc. Venkateshbabu", year: "2009" },
-    { name: "Jc. Bhuvaneshwari Kishore", year: "2008" },
-    { name: "Jc. Anandharaman", year: "2007" },
-    { name: "Jc. Rangachari", year: "2006" },
-    { name: "Jc. Badrinarayanan", year: "2005" },
-    { name: "Jc. Sivakumar", year: "2004", status: "Deceased" },
-    { name: "Jc. Viswanathan", year: "2003" },
-    { name: "Jc. Umapathi", year: "2002" },
-    { name: "Jc. Singh", year: "2001", status: "Deceased" },
-    { name: "Jc. Radhakrishnan", year: "2000" },
-    { name: "Jc. Kishore Kumar", year: "1999" },
-    { name: "Jc. Veeramani", year: "1998", status: "Deceased" },
-    { name: "Jc. Ramesh Babu", year: "1997", status: "Left" },
-    { name: "Jc. Kanna", year: "1996", status: "Left" },
-    { name: "Jc. Vijayakumar", year: "1995" },
-    { name: "Jc. Rangasamy", year: "1994" },
-    { name: "Jc. Kannan", year: "1993" },
-    { name: "Jc. Ravivarma", year: "1992" },
-    { name: "Jc. Seralathan", year: "1991" },
-    { name: "Jc. Ramamoorthy", year: "1990" },
-    { name: "Jc. Eswaran", year: "1989" },
-    { name: "Jc. Raja", year: "1988", status: "Deceased" },
-    { name: "Jc. Ethiraj", year: "1987" },
-    { name: "Jc. Thulasidas", year: "1986" },
-    { name: "Jc. Murugan", year: "1985" },
-    { name: "Jc. Palanisamy", year: "1984", status: "Deceased" },
-    { name: "Jc. Rajukinger", year: "1983", status: "Deceased" },
-    { name: "Jc. Angannan", year: "1981-82", status: "Deceased" }
+    { name: "Jc. Ashok", year: "2026", image: "assets/image/ASHOK.jpg", status: "Active" },
+    { name: "Jc. Ashif Iqbal", year: "2025", image: "assets/image/ASHIF IQBAL.jpg", status: "Active" },
+    { name: "Jc. Hari Prasad", year: "2024", image: "assets/image/HARI PRASAD.jpg", status: "Active" },
+    { name: "Jc. Hari Prasath", year: "2023", image: "assets/image/HARI PRASATH.jpg", status: "Active" },
+    { name: "Jc. Jayahari", year: "2022", image: "assets/image/JAYAHARI.jpg", status: "Active" },
+    { name: "Jc. Manikandan", year: "2021", image: "assets/image/MANIKANDAN.jpg", status: "Active" },
+    { name: "Jc. Nagaraj", year: "2020", image: "assets/image/NAGARAJ.jpg", status: "Active" },
+    { name: "Jc. Prabhakaran", year: "2019", image: "assets/image/PRABHAKARAN.jpg", status: "Active" },
+    { name: "Jc. Raj Vignesh", year: "2018", image: "assets/image/RAJ VIGNESH.jpg", status: "Active" },
+    { name: "Jc. Sabari", year: "2017", image: "assets/image/SABARI.jpg", status: "Active" },
+    { name: "Jc. Sakthivel", year: "2016", image: "assets/image/SAKTHIVEL.jpg", status: "Active" },
+    { name: "Jc. Sanjaykumar", year: "2015", image: "assets/image/SANJAYKUMAR.jpg", status: "Active" },
+    { name: "Jc. Sathish Kumar", year: "2014", image: "assets/image/SATHISH KUMAR.jpg", status: "Active" },
+    { name: "Jc. Swati Ravikumar", year: "2013", image: "assets/image/SWATI RAVIKUMAR.jpg", status: "Active" },
+    { name: "Jc. Tharunvel", year: "2012", image: "assets/image/THARUNVEL.jpg", status: "Active" },
+    { name: "Jc. Varoon Rajan", year: "2011", image: "assets/image/VAROON RAJAN.jpg", status: "Active" },
+    { name: "Jc. Vijayaragavan", year: "2010", image: "assets/image/VIJAYARAGAVAN.jpg", status: "Active" }
   ];
 
   opportunities = [
