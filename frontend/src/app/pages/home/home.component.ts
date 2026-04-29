@@ -162,11 +162,7 @@ import { Router, RouterModule } from '@angular/router';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 lg:gap-20">
           @for (item of activities; track item.text; let i = $index) {
             <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-8 group reveal-up" [style.transition-delay]="i * 100 + 'ms'">
-<<<<<<< HEAD
               <div class="relative w-[126px] h-[126px] sm:w-32 sm:h-32 flex-shrink-0 rounded-full overflow-hidden shadow-2xl border-4 border-white transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
-=======
-              <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-32 lg:w-32 lg:h-32 flex-shrink-0 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-xl border-4 border-white transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
->>>>>>> eeebb3572ad25c20474a51ed41711445966a40a2
                 <img [src]="item.image" [alt]="item.text" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
                 <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
