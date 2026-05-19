@@ -13,6 +13,24 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 dotenv.config();
 
 const app = express();
+
+// 1. CORS - MUST BE FIRST
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow all origins for now to solve the issue once and for all, 
+    // or you can keep it strict with allowedOrigins.
+    // origin is undefined for non-browser requests (like curl)
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200
+}));
+
+// Handle preflight globally
+app.options('*', cors());
+
 const PORT = process.env.PORT || 10000;
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -33,12 +51,6 @@ const allowedOrigins = [
 if (process.env.FRONTEND_URL) {
   allowedOrigins.push(process.env.FRONTEND_URL);
 }
-
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
