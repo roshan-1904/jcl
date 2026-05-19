@@ -37,7 +37,7 @@ const AdminDashboard = () => {
 
   // Data States
   const [events, setEvents] = useState<Event[]>([]);
-  const [presidents, setPresidents] = useState<President[]>([]);
+  const [_presidents, setPresidents] = useState<President[]>([]);
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [legacyImages, setLegacyImages] = useState<LegacyImage[]>([]);
@@ -331,7 +331,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
               {[
                 { label: 'Events', val: events.length, icon: <Calendar className="text-blue-500 w-4 h-4" /> },
-                /* { label: 'Presidents', val: presidents.length, icon: <User className="text-primary w-4 h-4" /> }, */
+                /* { label: 'Presidents', val: _presidents.length, icon: <User className="text-primary w-4 h-4" /> }, */
                 { label: 'Team', val: members.length, icon: <Users className="text-purple-500 w-4 h-4" /> },
                 { label: 'Inquiries', val: enquiries.length, icon: <Inbox className="text-orange-500 w-4 h-4" /> },
               ].map((stat, i) => (
