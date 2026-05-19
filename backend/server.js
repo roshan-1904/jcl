@@ -3,6 +3,9 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const dns = require('dns');
+const compression = require('compression');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Set DNS servers to Google's to ensure SRV records can be resolved
 dns.setServers(['8.8.8.8', '8.8.4.4']);
@@ -11,65 +14,127 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 10000;
+const MONGO_URI = process.env.MONGO_URI;
 
-app.use(cors());
-app.use(express.json());
+// 🚀 PRODUCTION OPTIMIZATIONS
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP for demo simplicity if needed, or configure properly
+}));
+app.use(compression()); // Gzip compression
 
-// MySQL Connection - Use root user to avoid permission issues
-const db = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  user: 'root',
-  password: '',
-  database: process.env.DB_NAME || 'jci_db'
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL // Add your Netlify/production URL in environment variables
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Rate Limiting to prevent abuse
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests from this IP, please try again after 15 minutes'
 });
+app.use('/api/', limiter);
 
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('Successfully connected to MongoDB');
+// MongoDB Connection
+if (!MONGO_URI) {
+  console.error('ERROR: MONGO_URI is not defined in .env file');
+} else {
+  mongoose.connect(MONGO_URI, {
+    maxPoolSize: 10, // Connection pooling
   })
-  .catch((err) => {
-    console.error('WARNING: MongoDB connection failed:', err.message);
-  });
+    .then(() => {
+      console.log('Successfully connected to MongoDB');
+    })
+    .catch((err) => {
+      console.error('WARNING: MongoDB connection failed:', err.message);
+    });
+}
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-// Event Schema
+// Event Schema - Added Indexing
 const eventSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  date: { type: String, required: true },
+  title: { type: String, required: true, index: true },
+  date: { type: String, required: true, index: true },
   time: { type: String, required: true },
   location: { type: String, required: true },
   description: { type: String, required: true },
-  type: { type: String, required: true },
+  type: { type: String, required: true, index: true },
   image: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now, index: true }
 });
 
 const Event = mongoose.model('Event', eventSchema);
 
-// Team Member Schema
+// Team Member Schema - Added Indexing
 const teamMemberSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, index: true },
   role: { type: String, required: true },
   bio: { type: String, required: true },
   image: { type: String, required: true },
-  order: { type: Number, default: 0 },
+  order: { type: Number, default: 0, index: true },
   createdAt: { type: Date, default: Date.now }
 });
 
 const TeamMember = mongoose.model('TeamMember', teamMemberSchema);
 
-// Enquiry Schema
+// Enquiry Schema - Added Indexing
 const enquirySchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, index: true },
   phone: { type: String, required: true },
   location: { type: String, required: true },
   message: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now, index: true }
+});
+
+const Enquiry = mongoose.model('Enquiry', enquirySchema);
+
+// President Schema
+const presidentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  year: { type: String, required: true },
+  image: { type: String, required: true }, // Stores URL or Base64
   createdAt: { type: Date, default: Date.now }
 });
+
+const President = mongoose.model('President', presidentSchema);
+
+// Legacy Image Schema
+const legacyImageSchema = new mongoose.Schema({
+  image: { type: String, required: true },
+  title: { type: String, default: 'Legacy Memory' },
+  createdAt: { type: Date, default: Date.now, index: true }
+});
+
+const LegacyImage = mongoose.model('LegacyImage', legacyImageSchema);
+
+// About Content Schema
+const aboutContentSchema = new mongoose.Schema({
+  title: { type: String, default: 'About JCI MidTown' },
+  subtitle: { type: String, default: 'Leadership Since 1981' },
+  description: { type: String, default: 'Dedicated to empowering young leaders, fostering community development, and driving positive change.' },
+  image: { type: String, default: '' },
+  homeAboutImage: { type: String, default: '' },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+const AboutContent = mongoose.model('AboutContent', aboutContentSchema);
 
 // Admin Credentials
 const ADMIN_CREDENTIALS = {
@@ -81,7 +146,7 @@ const ADMIN_CREDENTIALS = {
 const checkDbConnection = (req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({ 
-      message: 'Database connection is currently offline. Please verify your MongoDB configuration.',
+      message: 'Database connection is currently offline.',
       status: 'offline'
     });
   }
@@ -90,7 +155,7 @@ const checkDbConnection = (req, res, next) => {
 
 app.get('/', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
-  res.send(`JC Demo Backend is running. Database Status: ${dbStatus}`);
+  res.send(`JC Demo Backend is running. Status: ${dbStatus}`);
 });
 
 // 🔐 Login
@@ -103,136 +168,214 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Events endpoints
+// ================= ABOUT CONTENT =================
+
+app.get('/api/about-content', async (req, res) => {
+  try {
+    let content = await AboutContent.findOne().lean();
+    if (!content) {
+      content = await AboutContent.create({
+        title: 'About JCI MidTown',
+        subtitle: 'Leadership Since 1981',
+        description: 'Dedicated to empowering young leaders, fostering community development, and driving positive change.',
+        image: '',
+        homeAboutImage: ''
+      });
+    }
+    res.json(content);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching about content', error: err.message });
+  }
+});
+
+app.put('/api/about-content', checkDbConnection, async (req, res) => {
+  try {
+    const content = await AboutContent.findOneAndUpdate({}, req.body, { new: true, upsert: true });
+    res.json(content);
+  } catch (err) {
+    res.status(400).json({ message: 'Error updating about content', error: err.message });
+  }
+});
+
+// ================= EVENTS =================
+
+// GET events - Using select() to fetch only needed fields for performance
 app.get('/api/events', checkDbConnection, async (req, res) => {
   try {
-    const events = await Event.find().sort({ createdAt: -1 });
+    res.set('Cache-Control', 'public, max-age=60'); 
+    const events = await Event.find()
+      .select('-__v')
+      .sort({ createdAt: -1 })
+      .lean(); // Faster execution
     res.json(events);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching events', error: err.message });
   }
 });
 
-// ================= EVENTS =================
-
-// GET events
-app.get('/api/events', (req, res) => {
-  db.query('SELECT * FROM events ORDER BY createdAt DESC', (err, result) => {
-    if (err) return res.status(500).json(err);
-    res.json(result);
-  });
-});
-
 // POST event
-app.post('/api/events', (req, res) => {
-  const { title, date, time, location, description, type, image } = req.body;
-
-  const sql = `
-    INSERT INTO events (title, date, time, location, description, type, image)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  db.query(sql, [title, date, time, location, description, type, image], (err, result) => {
-    if (err) return res.status(400).json(err);
-    res.json({ message: 'Event created', id: result.insertId });
-  });
+app.post('/api/events', checkDbConnection, async (req, res) => {
+  try {
+    const newEvent = new Event(req.body);
+    const savedEvent = await newEvent.save();
+    res.status(201).json({ message: 'Event created', id: savedEvent._id });
+  } catch (err) {
+    res.status(400).json({ message: 'Error creating event', error: err.message });
+  }
 });
 
 // UPDATE event
-app.put('/api/events/:id', (req, res) => {
-  const { title, date, time, location, description, type, image } = req.body;
-
-  const sql = `
-    UPDATE events SET title=?, date=?, time=?, location=?, description=?, type=?, image=?
-    WHERE id=?
-  `;
-
-  db.query(sql, [title, date, time, location, description, type, image, req.params.id], (err) => {
-    if (err) return res.status(400).json(err);
+app.put('/api/events/:id', checkDbConnection, async (req, res) => {
+  try {
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedEvent) return res.status(404).json({ message: 'Event not found' });
     res.json({ message: 'Event updated' });
-  });
+  } catch (err) {
+    res.status(400).json({ message: 'Error updating event', error: err.message });
+  }
 });
 
 // DELETE event
-app.delete('/api/events/:id', (req, res) => {
-  db.query('DELETE FROM events WHERE id=?', [req.params.id], (err) => {
-    if (err) return res.status(400).json(err);
+app.delete('/api/events/:id', checkDbConnection, async (req, res) => {
+  try {
+    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+    if (!deletedEvent) return res.status(404).json({ message: 'Event not found' });
     res.json({ message: 'Event deleted' });
-  });
+  } catch (err) {
+    res.status(400).json({ message: 'Error deleting event', error: err.message });
+  }
 });
 
 
 // ================= MEMBERS =================
 
-app.get('/api/members', (req, res) => {
-  db.query('SELECT * FROM members ORDER BY display_order ASC', (err, result) => {
-    if (err) return res.status(500).json(err);
-    res.json(result);
-  });
+app.get('/api/members', checkDbConnection, async (req, res) => {
+  try {
+    const members = await TeamMember.find()
+      .select('-__v')
+      .sort({ order: 1 })
+      .lean();
+    res.json(members);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching members', error: err.message });
+  }
 });
 
-app.post('/api/members', (req, res) => {
-  const { name, role, bio, image, display_order } = req.body;
-
-  db.query(
-    'INSERT INTO members (name, role, bio, image, display_order) VALUES (?, ?, ?, ?, ?)',
-    [name, role, bio, image, display_order || 0],
-    (err, result) => {
-      if (err) return res.status(400).json(err);
-      res.json({ message: 'Member added', id: result.insertId });
-    }
-  );
+app.post('/api/members', checkDbConnection, async (req, res) => {
+  try {
+    const newMember = new TeamMember(req.body);
+    const savedMember = await newMember.save();
+    res.status(201).json({ message: 'Member added', id: savedMember._id });
+  } catch (err) {
+    res.status(400).json({ message: 'Error adding member', error: err.message });
+  }
 });
 
-app.put('/api/members/:id', (req, res) => {
-  const { name, role, bio, image, display_order } = req.body;
+// ================= PRESIDENTS =================
 
-  db.query(
-    'UPDATE members SET name=?, role=?, bio=?, image=?, display_order=? WHERE id=?',
-    [name, role, bio, image, display_order, req.params.id],
-    (err) => {
-      if (err) return res.status(400).json(err);
-      res.json({ message: 'Member updated' });
-    }
-  );
+app.get('/api/presidents', checkDbConnection, async (req, res) => {
+  try {
+    const presidents = await President.find().sort({ year: -1 }).lean();
+    res.json(presidents);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching presidents', error: err.message });
+  }
 });
 
-// Enquiry endpoints
+app.post('/api/presidents', checkDbConnection, async (req, res) => {
+  try {
+    const newPresident = new President(req.body);
+    const saved = await newPresident.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({ message: 'Error adding president', error: err.message });
+  }
+});
+
+app.put('/api/presidents/:id', checkDbConnection, async (req, res) => {
+  try {
+    const updated = await President.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ message: 'Error updating president', error: err.message });
+  }
+});
+
+app.delete('/api/presidents/:id', checkDbConnection, async (req, res) => {
+  try {
+    await President.findByIdAndDelete(req.params.id);
+    res.json({ message: 'President deleted' });
+  } catch (err) {
+    res.status(400).json({ message: 'Error deleting president', error: err.message });
+  }
+});
+
+// ================= LEGACY IMAGES =================
+
+app.get('/api/legacy-images', checkDbConnection, async (req, res) => {
+  try {
+    const images = await LegacyImage.find().sort({ createdAt: -1 }).lean();
+    res.json(images);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching legacy images', error: err.message });
+  }
+});
+
+app.post('/api/legacy-images', checkDbConnection, async (req, res) => {
+  try {
+    const newImage = new LegacyImage(req.body);
+    const saved = await newImage.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(400).json({ message: 'Error adding legacy image', error: err.message });
+  }
+});
+
+app.delete('/api/legacy-images/:id', checkDbConnection, async (req, res) => {
+  try {
+    await LegacyImage.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Legacy image deleted' });
+  } catch (err) {
+    res.status(400).json({ message: 'Error deleting legacy image', error: err.message });
+  }
+});
+
+// ================= ENQUIRIES =================
+
 app.get('/api/enquiries', checkDbConnection, async (req, res) => {
   try {
-    const enquiries = await Enquiry.find().sort({ createdAt: -1 });
+    const enquiries = await Enquiry.find()
+      .select('-__v')
+      .sort({ createdAt: -1 })
+      .lean();
     res.json(enquiries);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching enquiries', error: err.message });
   }
 });
 
-
-// ================= ENQUIRIES =================
-
-app.get('/api/enquiries', (req, res) => {
-  db.query('SELECT * FROM enquiries ORDER BY createdAt DESC', (err, result) => {
-    if (err) return res.status(500).json(err);
-    res.json(result);
-  });
+app.post('/api/enquiries', checkDbConnection, async (req, res) => {
+  try {
+    const newEnquiry = new Enquiry(req.body);
+    const savedEnquiry = await newEnquiry.save();
+    res.status(201).json({ message: 'Enquiry saved', id: savedEnquiry._id });
+  } catch (err) {
+    res.status(400).json({ message: 'Error saving enquiry', error: err.message });
+  }
 });
 
-app.post('/api/enquiries', (req, res) => {
-  const { name, email, phone, location, message } = req.body;
-
-  db.query(
-    'INSERT INTO enquiries (name, email, phone, location, message) VALUES (?, ?, ?, ?, ?)',
-    [name, email, phone, location, message],
-    (err, result) => {
-      if (err) return res.status(400).json(err);
-      res.json({ message: 'Enquiry saved', id: result.insertId });
-    }
-  );
-});
-
-app.delete('/api/enquiries/:id', (req, res) => {
-  db.query('DELETE FROM enquiries WHERE id=?', [req.params.id], (err) => {
-    if (err) return res.status(400).json(err);
+app.delete('/api/enquiries/:id', checkDbConnection, async (req, res) => {
+  try {
+    const deletedEnquiry = await Enquiry.findByIdAndDelete(req.params.id);
+    if (!deletedEnquiry) return res.status(404).json({ message: 'Enquiry not found' });
     res.json({ message: 'Enquiry deleted' });
-  });
+  } catch (err) {
+    res.status(400).json({ message: 'Error deleting enquiry', error: err.message });
+  }
+});
+
+app.listen(PORT, () => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Server is running on port ${PORT}`);
+  }
 });
