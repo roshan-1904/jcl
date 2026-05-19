@@ -18,7 +18,8 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // 🚀 PRODUCTION OPTIMIZATIONS
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable CSP for demo simplicity if needed, or configure properly
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 app.use(compression()); // Gzip compression
 
@@ -26,18 +27,17 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://jclsalem.netlify.app',
-  process.env.FRONTEND_URL // Add your Netlify/production URL in environment variables
+  'https://jclsalem.netlify.app/'
 ].filter(Boolean);
 
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 app.use(express.json({ limit: '50mb' }));
