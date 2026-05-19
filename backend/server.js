@@ -14,22 +14,21 @@ dotenv.config();
 
 const app = express();
 
-// 1. CORS - MUST BE FIRST
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow all origins for now to solve the issue once and for all, 
-    // or you can keep it strict with allowedOrigins.
-    // origin is undefined for non-browser requests (like curl)
-    callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  optionsSuccessStatus: 200
-}));
-
-// Handle preflight globally
-app.options('*', cors());
+// 1. UNIVERSAL CORS MIDDLEWARE - MANUAL HEADERS
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  // Allow all origins for debugging, or you can restrict this later
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle Preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 
 const PORT = process.env.PORT || 10000;
 const MONGO_URI = process.env.MONGO_URI;
