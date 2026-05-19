@@ -2,10 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { eventService } from '../../services/api';
-import type { Event, TeamMember, Enquiry, President, AboutContent } from '../../services/api';
+import type { Event, TeamMember, Enquiry, President, AboutContent, LegacyImage } from '../../services/api';
 import { 
   Calendar, 
-  User, 
   Users, 
   Inbox, 
   LogOut, 
@@ -14,24 +13,24 @@ import {
   Upload, 
   ChevronRight,
   MessageSquare,
-  Download,
   FileText,
   FileSpreadsheet,
   Image as ImageIcon,
   Square,
-  CheckSquare
+  CheckSquare,
+  Menu,
+  X
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import html2canvas from 'html2canvas';
 
 const AdminDashboard = () => {
   const [currentTab, setCurrentTab] = useState<'events' | 'team' | 'enquiries' | 'presidents' | 'about' | 'legacy'>('events');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const mainRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const tableRef = useRef<HTMLTableElement>(null);
 
   // Common State
   const [isUploading, setIsUploading] = useState(false);
@@ -47,7 +46,6 @@ const AdminDashboard = () => {
   });
 
   // Selection State
-  const [selectedPresidents, setSelectedPresidents] = useState<string[]>([]);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [selectedLegacy, setSelectedLegacy] = useState<string[]>([]);
 
@@ -65,9 +63,7 @@ const AdminDashboard = () => {
     name: '', role: '', bio: '', image: '', order: 0
   });
 
-  // Form States (Presidents)
-  const [isEditPresMode, setIsEditPresMode] = useState(false);
-  const [editingPresId, setEditingPresId] = useState<string | null>(null);
+  // Form States (Presidents - Unused but keeping structure)
   const [newPres, setNewPres] = useState<President>({ name: '', year: '', image: '' });
 
   // Form States (Legacy)
@@ -87,6 +83,7 @@ const AdminDashboard = () => {
       { opacity: 0, y: 30 }, 
       { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", delay: 0.1 }
     );
+    setIsSidebarOpen(false);
   }, [currentTab]);
 
   const loadAllData = () => {
@@ -150,15 +147,6 @@ const AdminDashboard = () => {
     } catch (error) { alert('Error saving member'); }
   };
 
-  const savePres = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (isEditPresMode && editingPresId) await eventService.updatePresident(editingPresId, newPres);
-      else await eventService.addPresident(newPres);
-      resetPresForm(); loadAllData(); alert('President Saved!');
-    } catch (error) { alert('Error saving president'); }
-  };
-
   const saveLegacyImage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newLegacyImage.image) {
@@ -196,18 +184,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const deleteSelectedPresidents = async () => {
-    if (!window.confirm(`Are you sure you want to delete ${selectedPresidents.length} selected presidents?`)) return;
-    try {
-      await Promise.all(selectedPresidents.map(id => eventService.deletePresident(id)));
-      setSelectedPresidents([]);
-      loadAllData();
-      alert('Selected presidents deleted!');
-    } catch (error) {
-      alert('Error deleting selected presidents');
-    }
-  };
-
   const deleteSelectedLegacy = async () => {
     if (!window.confirm(`Are you sure you want to delete ${selectedLegacy.length} selected memories?`)) return;
     try {
@@ -232,20 +208,6 @@ const AdminDashboard = () => {
       setSelectedEvents([]);
     } else {
       setSelectedEvents(events.map(e => e._id!));
-    }
-  };
-
-  const toggleSelectPresident = (id: string) => {
-    setSelectedPresidents(prev => 
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
-
-  const toggleSelectAllPresidents = () => {
-    if (selectedPresidents.length === presidents.length) {
-      setSelectedPresidents([]);
-    } else {
-      setSelectedPresidents(presidents.map(p => p._id!));
     }
   };
 
@@ -282,61 +244,40 @@ const AdminDashboard = () => {
     XLSX.writeFile(wb, 'events_list.xlsx');
   };
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.text("JCI Salem Midtown - Past Presidents", 14, 15);
-    autoTable(doc, {
-      startY: 20,
-      head: [['Name', 'Year']],
-      body: presidents.map(p => [p.name, p.year]),
-    });
-    doc.save('presidents_list.pdf');
-  };
-
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(presidents.map(p => ({ Name: p.name, Year: p.year })));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Presidents");
-    XLSX.writeFile(wb, 'presidents_list.xlsx');
-  };
-
-  const exportToImage = async () => {
-    if (tableRef.current) {
-      const canvas = await html2canvas(tableRef.current);
-      const link = document.createElement('a');
-      link.download = 'presidents_table.jpg';
-      link.href = canvas.toDataURL('image/jpeg');
-      link.click();
-    }
-  };
-
   // --- EDIT START METHODS ---
-  const startEventEdit = (e: Event) => { setIsEditEventMode(true); setEditingEventId(e._id!); setNewEvent({...e}); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const startMemberEdit = (m: TeamMember) => { setIsEditMemberMode(true); setEditingMemberId(m._id!); setNewMember({...m}); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const startPresEdit = (p: President) => { setIsEditPresMode(true); setEditingPresId(p._id!); setNewPres({ name: p.name, year: p.year, image: p.image }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const startEventEdit = (e: Event) => { setIsEditEventMode(true); setEditingEventId(e._id!); setNewEvent({...e}); if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const startMemberEdit = (m: TeamMember) => { setIsEditMemberMode(true); setEditingMemberId(m._id!); setNewMember({...m}); if (scrollRef.current) scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   // --- RESET METHODS ---
   const resetEventForm = () => { setIsEditEventMode(false); setEditingEventId(null); setNewEvent({ title: '', date: '', time: '', location: '', description: '', type: 'Major Event', image: '' }); };
   const resetMemberForm = () => { setIsEditMemberMode(false); setEditingMemberId(null); setNewMember({ name: '', role: '', bio: '', image: '', order: 0 }); };
-  const resetPresForm = () => { setIsEditPresMode(false); setEditingPresId(null); setNewPres({ name: '', year: '', image: '' }); };
 
   const handleLogout = () => { localStorage.removeItem('isAdminAuthenticated'); navigate('/admin/login'); };
 
   return (
-    <div className="h-screen bg-[#f8fafc] flex font-sans selection:bg-primary/20 overflow-hidden" ref={mainRef}>
-      {/* 🚀 PREMIUM SIDEBAR (Stationary) */}
-      <aside className="w-72 bg-[#0f4c75] text-white flex flex-col h-full z-50 shadow-2xl shrink-0">
-        <div className="p-8">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
-               <img src="https://www.jcislmmidtown.com/assets/images/logo-default.png" alt="Logo" className="w-7 h-auto" />
-            </div>
-            <span className="text-xl font-black tracking-tighter uppercase">Midtown<span className="text-primary text-2xl">.</span></span>
-          </div>
-          <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/40 ml-1">Admin Experience</p>
-        </div>
+    <div className="h-screen bg-[#f8fafc] flex font-sans selection:bg-primary/20 overflow-hidden relative" ref={mainRef}>
+      {/* Mobile Sidebar Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-[60] lg:hidden backdrop-blur-sm transition-all duration-300 ${isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
 
-        <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto scrollbar-hide">
+      {/* 🚀 PREMIUM SIDEBAR */}
+      <aside className={`fixed lg:relative inset-y-0 left-0 w-64 bg-[#0f4c75] text-white flex flex-col h-full z-[70] shadow-2xl shrink-0 transition-transform duration-300 ease-in-out lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 flex items-center justify-between">
+          <div className="flex items-center space-x-3 mb-1">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-lg">
+               <img src="https://www.jcislmmidtown.com/assets/images/logo-default.png" alt="Logo" className="w-5 h-auto" />
+            </div>
+            <span className="text-lg font-black tracking-tighter uppercase">Midtown<span className="text-primary text-xl">.</span></span>
+          </div>
+          <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-white/50 hover:text-white">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <p className="text-[8px] uppercase tracking-[0.3em] font-bold text-white/40 ml-7 -mt-4 mb-2">Admin Experience</p>
+
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-hide">
           {[
             { id: 'events', label: 'Events', icon: <Calendar className="w-5 h-5" /> },
             /* { id: 'presidents', label: 'Presidents', icon: <User className="w-5 h-5" /> }, */
@@ -355,44 +296,52 @@ const AdminDashboard = () => {
           ))}
         </nav>
 
-        <div className="p-6 border-t border-white/5">
-          <button onClick={handleLogout} className="flex items-center space-x-3 w-full px-6 py-4 rounded-2xl text-sm font-black text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
-            <LogOut className="w-5 h-5" /> <span>Sign Out</span>
+        <div className="p-4 border-t border-white/5">
+          <button onClick={handleLogout} className="flex items-center space-x-3 w-full px-5 py-3 rounded-xl text-sm font-black text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
+            <LogOut className="w-4 h-4" /> <span>Sign Out</span>
           </button>
         </div>
       </aside>
 
-      {/* 💎 MAIN CONTENT AREA (The only part that scrolls) */}
+      {/* 💎 MAIN CONTENT AREA (Independent Scrolling Container) */}
       <main className="flex-1 flex flex-col h-full relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-primary/5 to-transparent -z-10 blur-[100px]"></div>
         
-        <header className="h-24 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex items-center justify-between px-10 shrink-0">
-           <h2 className="text-2xl font-black text-secondary tracking-tight capitalize flex items-center gap-3">
-              {currentTab} <span className="text-[10px] bg-primary/10 text-primary px-3 py-1 rounded-full uppercase tracking-widest font-black">Management</span>
-           </h2>
-           <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary to-secondary p-0.5 shadow-xl">
-              <div className="w-full h-full bg-white rounded-[14px] flex items-center justify-center text-secondary font-black">A</div>
+        <header className="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex items-center justify-between px-4 md:px-8 shrink-0">
+           <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setIsSidebarOpen(true)}
+                className="lg:hidden p-2 text-secondary hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+              <h2 className="text-lg md:text-xl font-black text-secondary tracking-tight capitalize flex items-center gap-2 md:gap-3">
+                {currentTab} <span className="hidden sm:inline-block text-[9px] bg-primary/10 text-primary px-3 py-1 rounded-full uppercase tracking-widest font-black">Management</span>
+              </h2>
+           </div>
+           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary p-0.5 shadow-xl">
+              <div className="w-full h-full bg-white rounded-[10px] flex items-center justify-center text-secondary font-black">A</div>
            </div>
         </header>
 
         {/* 🚀 This is the only scrolling part */}
         <div className="flex-1 overflow-y-auto scroll-smooth touch-pan-y" ref={scrollRef} data-lenis-prevent>
-          <div className="p-10 max-w-6xl mx-auto pb-32 tab-content-reveal">
+          <div className="p-4 md:p-8 max-w-6xl mx-auto pb-20 tab-content-reveal">
             {/* STATS */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            {[
-              { label: 'Events', val: events.length, icon: <Calendar className="text-blue-500" /> },
-              /* { label: 'Presidents', val: presidents.length, icon: <User className="text-primary" /> }, */
-              { label: 'Team', val: members.length, icon: <Users className="text-purple-500" /> },
-              { label: 'Inquiries', val: enquiries.length, icon: <Inbox className="text-orange-500" /> },
-            ].map((stat, i) => (
-              <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
-                <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mb-4">{stat.icon}</div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
-                <h3 className="text-3xl font-black text-secondary mt-1 tracking-tighter">{stat.val}</h3>
-              </div>
-            ))}
-          </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+              {[
+                { label: 'Events', val: events.length, icon: <Calendar className="text-blue-500 w-4 h-4" /> },
+                /* { label: 'Presidents', val: presidents.length, icon: <User className="text-primary w-4 h-4" /> }, */
+                { label: 'Team', val: members.length, icon: <Users className="text-purple-500 w-4 h-4" /> },
+                { label: 'Inquiries', val: enquiries.length, icon: <Inbox className="text-orange-500 w-4 h-4" /> },
+              ].map((stat, i) => (
+                <div key={i} className="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500">
+                  <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center mb-3">{stat.icon}</div>
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                  <h3 className="text-2xl font-black text-secondary mt-1 tracking-tighter">{stat.val}</h3>
+                </div>
+              ))}
+            </div>
 
           {/* --- EVENTS TAB --- */}
           {currentTab === 'events' && (
@@ -444,8 +393,9 @@ const AdminDashboard = () => {
                  </div>
               </div>
 
-              <div className="bg-white rounded-[1.5rem] overflow-hidden border border-slate-100 shadow-sm">
-                <table className="w-full text-left border-collapse">
+              <div className="bg-white rounded-[1.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[700px]">
                   <thead>
                     <tr className="bg-slate-50/50 border-b border-slate-100">
                       <th className="px-6 py-4 w-10">
@@ -498,105 +448,16 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+              </div>
             </div>
           )}
-
-          {/* --- PRESIDENTS TAB --- */}
-          {/* currentTab === 'presidents' && (
-            <div className="space-y-10 animate-fade-in">
-              <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-10">
-                <h3 className="text-xl font-black text-secondary mb-8">{isEditPresMode ? 'Update Leadership Record' : 'Register New President'}</h3>
-                <form onSubmit={savePres} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <input type="text" value={newPres.name} onChange={e => setNewPres({...newPres, name: e.target.value})} placeholder="Jc. Name" className="admin-input-premium" required />
-                  <input type="text" value={newPres.year} onChange={e => setNewPres({...newPres, year: e.target.value})} placeholder="Year (e.g. 2026)" className="admin-input-premium" required />
-                  <div className="col-span-full">
-                    <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'president')} className="hidden" id="pres-upload" />
-                    <label htmlFor="pres-upload" className="w-full py-16 border-2 border-dashed border-slate-200 rounded-[2.5rem] flex flex-col items-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                      {newPres.image ? <img src={newPres.image} className="w-32 h-32 rounded-[2rem] object-cover shadow-2xl mb-4 border-4 border-white" alt="" /> : <Upload className="w-10 h-10 text-slate-200 mb-4" />}
-                      <p className="font-black text-secondary/60 uppercase text-xs tracking-widest">{isUploading ? 'Uploading...' : 'Choose Photo'}</p>
-                    </label>
-                  </div>
-                  <div className="col-span-full flex justify-end gap-4 pt-6">
-                    {isEditPresMode && <button type="button" onClick={resetPresForm} className="text-xs font-black text-slate-400 uppercase">Cancel</button>}
-                    <button type="submit" disabled={isUploading || !newPres.image} className="btn-primary min-w-[200px]">Save President</button>
-                  </div>
-                </form>
-              </div>
-
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6 px-4">
-                 <div className="flex items-center gap-4">
-                    {selectedPresidents.length > 0 && (
-                       <button onClick={deleteSelectedPresidents} className="flex items-center gap-2 px-6 py-3 bg-red-50 text-red-500 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm">
-                          <Trash2 className="w-4 h-4" /> Delete Selected ({selectedPresidents.length})
-                       </button>
-                    )}
-                 </div>
-                 <div className="flex items-center gap-3">
-                    <button onClick={exportToPDF} className="p-3 bg-white rounded-xl border border-slate-100 text-secondary hover:bg-primary hover:text-white transition-all shadow-sm flex items-center gap-2 font-black text-[10px] uppercase tracking-widest">
-                       <FileText className="w-4 h-4" /> PDF
-                    </button>
-                    <button onClick={exportToExcel} className="p-3 bg-white rounded-xl border border-slate-100 text-secondary hover:bg-primary hover:text-white transition-all shadow-sm flex items-center gap-2 font-black text-[10px] uppercase tracking-widest">
-                       <FileSpreadsheet className="w-4 h-4" /> Excel
-                    </button>
-                    <button onClick={exportToImage} className="p-3 bg-white rounded-xl border border-slate-100 text-secondary hover:bg-primary hover:text-white transition-all shadow-sm flex items-center gap-2 font-black text-[10px] uppercase tracking-widest">
-                       <ImageIcon className="w-4 h-4" /> JPG
-                    </button>
-                 </div>
-              </div>
-
-              <div className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-sm">
-                <table className="w-full text-left border-collapse" ref={tableRef}>
-                  <thead>
-                    <tr className="bg-slate-50/50 border-b border-slate-100">
-                      <th className="px-8 py-5 w-10">
-                        <button onClick={toggleSelectAllPresidents} className="text-slate-300 hover:text-primary transition-colors">
-                           {selectedPresidents.length === presidents.length && presidents.length > 0 ? <CheckSquare className="w-5 h-5 text-primary" /> : <Square className="w-5 h-5" />}
-                        </button>
-                      </th>
-                      <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Leader</th>
-                      <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Year</th>
-                      <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {presidents.map(p => (
-                      <tr key={p._id || p.name} className={`border-b border-slate-50 hover:bg-slate-50/30 transition-all group ${selectedPresidents.includes(p._id!) ? 'bg-primary/5' : ''}`}>
-                        <td className="px-8 py-5">
-                           <button onClick={() => toggleSelectPresident(p._id!)} className="text-slate-200 hover:text-primary transition-colors">
-                              {selectedPresidents.includes(p._id!) ? <CheckSquare className="w-5 h-5 text-primary" /> : <Square className="w-5 h-5" />}
-                           </button>
-                        </td>
-                        <td className="px-8 py-5">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-white shadow-md group-hover:scale-110 transition-transform">
-                              <img src={p.image} className="w-full h-full object-cover" alt="" />
-                            </div>
-                            <span className="font-black text-secondary uppercase tracking-tight">{p.name}</span>
-                          </div>
-                        </td>
-                        <td className="px-8 py-5">
-                          <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">{p.year}</span>
-                        </td>
-                        <td className="px-8 py-5 text-right">
-                          <div className="flex justify-end gap-3">
-                            <button onClick={() => startPresEdit(p)} className="w-9 h-9 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-blue-500 shadow-sm hover:bg-blue-500 hover:text-white transition-all"><Edit3 className="w-4 h-4" /></button>
-                            <button onClick={() => deleteItem(p._id!, 'president')} className="w-9 h-9 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-red-500 shadow-sm hover:bg-red-500 hover:text-white transition-all"><Trash2 className="w-4 h-4" /></button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) */ }
 
           {/* --- TEAM TAB --- */}
           {currentTab === 'team' && (
             <div className="space-y-6 animate-fade-in">
                <div className="bg-white p-8 rounded-[1.5rem] border border-slate-100">
                   <h3 className="text-lg font-black text-secondary mb-6">Manage Active Team</h3>
-                  <form onSubmit={saveMember} className="grid grid-cols-2 gap-6">
+                  <form onSubmit={saveMember} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                      <input type="text" value={newMember.name} onChange={e => setNewMember({...newMember, name: e.target.value})} placeholder="Name" className="admin-input-premium" />
                      <input type="text" value={newMember.role} onChange={e => setNewMember({...newMember, role: e.target.value})} placeholder="Role" className="admin-input-premium" />
                      <div className="col-span-full">
@@ -687,8 +548,9 @@ const AdminDashboard = () => {
                  </div>
               </div>
 
-              <div className="bg-white rounded-[1.5rem] overflow-hidden border border-slate-100 shadow-sm">
-                <table className="w-full text-left border-collapse">
+              <div className="bg-white rounded-[1.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[700px]">
                   <thead>
                     <tr className="bg-slate-50/50 border-b border-slate-100">
                       <th className="px-6 py-4 w-10">
@@ -726,23 +588,24 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+              </div>
             </div>
           )}
 
           {/* --- INQUIRIES TAB --- */}
           {currentTab === 'enquiries' && (
-            <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden animate-fade-in shadow-sm">
+            <div className="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden animate-fade-in shadow-sm">
                {enquiries.map(eq => (
-                 <div key={eq._id} className="p-8 border-b border-slate-50 flex items-start justify-between hover:bg-slate-50/50 transition-all">
-                    <div className="flex gap-6">
-                       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0"><MessageSquare className="w-5 h-5" /></div>
+                 <div key={eq._id} className="p-6 md:p-8 border-b border-slate-50 flex flex-col md:flex-row items-start justify-between hover:bg-slate-50/50 transition-all gap-6">
+                    <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 self-start md:self-center"><MessageSquare className="w-5 h-5" /></div>
                        <div>
-                          <p className="font-black text-secondary text-lg">{eq.name} • <span className="text-primary text-xs uppercase tracking-widest">{eq.location}</span></p>
-                          <p className="text-xs font-bold text-slate-400 mb-4">{eq.email} • {eq.phone}</p>
-                          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 italic text-slate-600 text-sm">"{eq.message}"</div>
+                          <p className="font-black text-secondary text-base md:text-lg">{eq.name} • <span className="text-primary text-[10px] uppercase tracking-widest">{eq.location}</span></p>
+                          <p className="text-[11px] font-bold text-slate-400 mb-4">{eq.email} • {eq.phone}</p>
+                          <div className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100 italic text-slate-600 text-sm">"{eq.message}"</div>
                        </div>
                     </div>
-                    <button onClick={() => deleteItem(eq._id!, 'enquiry')} className="w-12 h-12 rounded-2xl bg-white border border-slate-100 text-red-500 shadow-sm flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"><Trash2 className="w-5 h-5" /></button>
+                    <button onClick={() => deleteItem(eq._id!, 'enquiry')} className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white border border-slate-100 text-red-500 shadow-sm flex items-center justify-center hover:bg-red-500 hover:text-white transition-all self-end md:self-start"><Trash2 className="w-5 h-5" /></button>
                  </div>
                ))}
                {enquiries.length === 0 && <div className="py-32 text-center opacity-20 uppercase font-black tracking-widest text-sm">Inbox is empty</div>}
