@@ -25,6 +25,7 @@ app.use(compression()); // Gzip compression
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
+  'https://jclsalem.netlify.app',
   process.env.FRONTEND_URL // Add your Netlify/production URL in environment variables
 ].filter(Boolean);
 
