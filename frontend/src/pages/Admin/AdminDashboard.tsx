@@ -64,7 +64,7 @@ const AdminDashboard = () => {
   });
 
   // Form States (Presidents - Unused but keeping structure)
-  const [newPres, setNewPres] = useState<President>({ name: '', year: '', image: '' });
+  const [_newPres, setNewPres] = useState<President>({ name: '', year: '', image: '' });
 
   // Form States (Legacy)
   const [newLegacyImage, setNewLegacyImage] = useState<LegacyImage>({ image: '', title: '' });
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
       const base64 = reader.result as string;
       if (type === 'event') setNewEvent({ ...newEvent, image: base64 });
       else if (type === 'member') setNewMember({ ...newMember, image: base64 });
-      else if (type === 'president') setNewPres({ ...newPres, image: base64 });
+      else if (type === 'president') setNewPres({ ..._newPres, image: base64 });
       else if (type === 'about') setAboutContent({ ...aboutContent, image: base64 });
       else if (type === 'legacy') setNewLegacyImage({ ...newLegacyImage, image: base64 });
       setIsUploading(false);
