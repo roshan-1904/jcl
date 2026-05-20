@@ -113,7 +113,6 @@ const enquirySchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, index: true },
   phone: { type: String, required: true },
-  location: { type: String, required: true },
   message: { type: String, required: true },
   createdAt: { type: Date, default: Date.now, index: true }
 });
@@ -159,18 +158,33 @@ const ADMIN_CREDENTIALS = {
 
 // Middleware to check DB connection
 const checkDbConnection = (req, res, next) => {
-  if (mongoose.connection.readyState !== 1) {
+  const state = mongoose.connection.readyState;
+  if (state !== 1) {
+    const states = {
+      0: 'disconnected',
+      2: 'connecting',
+      3: 'disconnecting',
+      99: 'uninitialized',
+    };
     return res.status(503).json({ 
-      message: 'Database connection is currently offline.',
-      status: 'offline'
+      message: 'Database connection is not ready.',
+      status: states[state] || 'unknown',
+      info: 'Please check your MONGO_URI and MongoDB Atlas IP whitelist.'
     });
   }
   next();
 };
 
 app.get('/', (req, res) => {
-  const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
-  res.send(`JC Demo Backend is running. Status: ${dbStatus}`);
+  const state = mongoose.connection.readyState;
+  const states = {
+    0: 'Disconnected',
+    1: 'Connected',
+    2: 'Connecting',
+    3: 'Disconnecting',
+    99: 'Uninitialized',
+  };
+  res.send(`JC Demo Backend is running. Status: ${states[state] || 'Unknown'}`);
 });
 
 // 🏥 Health Check Endpoint
@@ -208,7 +222,7 @@ app.post('/api/login', (req, res) => {
 
 // ================= ABOUT CONTENT =================
 
-app.get('/api/about-content', async (req, res) => {
+app.get('/api/about-content', checkDbConnection, async (req, res) => {
   try {
     let content = await AboutContent.findOne().lean();
     if (!content) {

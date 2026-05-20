@@ -4,7 +4,7 @@ import { eventService } from '../../services/api';
 import { MapPin, Phone, Mail, Send } from 'lucide-react';
 
 const Contact = () => {
-  const [enquiryData, setEnquiryData] = useState({ name: '', email: '', phone: '', location: '', message: '' });
+  const [enquiryData, setEnquiryData] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -20,7 +20,7 @@ const Contact = () => {
 
   const handleEnquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!enquiryData.name || !enquiryData.email || !enquiryData.phone) {
+    if (!enquiryData.name || !enquiryData.email || !enquiryData.phone || !enquiryData.message) {
       alert('Please fill in all required fields');
       return;
     }
@@ -28,9 +28,11 @@ const Contact = () => {
     try {
       await eventService.addEnquiry(enquiryData);
       alert('Enquiry sent successfully!');
-      setEnquiryData({ name: '', email: '', phone: '', location: '', message: '' });
-    } catch (error) {
-      alert('Error sending enquiry.');
+      setEnquiryData({ name: '', email: '', phone: '', message: '' });
+    } catch (error: any) {
+      console.error('Enquiry Error:', error);
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Error sending enquiry.';
+      alert(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -72,10 +74,7 @@ const Contact = () => {
           <div className="bg-white p-12 md:p-16 rounded-[4rem] shadow-2xl border border-slate-50 contact-reveal">
             <h2 className="text-4xl font-black text-secondary mb-12 tracking-tighter uppercase">Send <span className="text-primary">Dispatch</span></h2>
             <form onSubmit={handleEnquirySubmit} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <input type="text" value={enquiryData.name} onChange={(e) => setEnquiryData({...enquiryData, name: e.target.value})} required className="w-full p-6 rounded-3xl bg-slate-50 border-none outline-none focus:ring-4 focus:ring-primary/10 text-secondary font-black text-sm" placeholder="Full Name" />
-                <input type="text" value={enquiryData.location} onChange={(e) => setEnquiryData({...enquiryData, location: e.target.value})} required className="w-full p-6 rounded-3xl bg-slate-50 border-none outline-none focus:ring-4 focus:ring-primary/10 text-secondary font-black text-sm" placeholder="City/Region" />
-              </div>
+              <input type="text" value={enquiryData.name} onChange={(e) => setEnquiryData({...enquiryData, name: e.target.value})} required className="w-full p-6 rounded-3xl bg-slate-50 border-none outline-none focus:ring-4 focus:ring-primary/10 text-secondary font-black text-sm" placeholder="Full Name" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <input type="email" value={enquiryData.email} onChange={(e) => setEnquiryData({...enquiryData, email: e.target.value})} required className="w-full p-6 rounded-3xl bg-slate-50 border-none outline-none focus:ring-4 focus:ring-primary/10 text-secondary font-black text-sm" placeholder="Email Address" />
                 <input type="tel" value={enquiryData.phone} onChange={(e) => setEnquiryData({...enquiryData, phone: e.target.value})} required className="w-full p-6 rounded-3xl bg-slate-50 border-none outline-none focus:ring-4 focus:ring-primary/10 text-secondary font-black text-sm" placeholder="Contact Number" />

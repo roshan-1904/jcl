@@ -93,13 +93,19 @@ const Home: React.FC = () => {
 
   const handleEnquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!enquiryData.name || !enquiryData.email || !enquiryData.phone || !enquiryData.message) {
+      alert('Please fill in all required fields');
+      return;
+    }
     setIsSubmitting(true);
     try {
       await eventService.addEnquiry(enquiryData);
       alert('Enquiry sent successfully!');
-      setEnquiryData({ name: '', email: '', phone: '', location: '', message: '' });
-    } catch (error) {
-      alert('Error sending enquiry.');
+      setEnquiryData({ name: '', email: '', phone: '', message: '' });
+    } catch (error: any) {
+      console.error('Enquiry Error:', error);
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Error sending enquiry.';
+      alert(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -253,7 +259,10 @@ const Home: React.FC = () => {
              <h2 className="text-5xl font-black text-secondary mb-12 tracking-tighter uppercase">Get In <span className="text-primary">Touch</span></h2>
              <form onSubmit={handleEnquirySubmit} className="space-y-8">
                 <input type="text" placeholder="Name" required className="w-full p-6 rounded-3xl bg-white shadow-sm border border-slate-100 outline-none focus:ring-4 focus:ring-primary/10 transition-all" value={enquiryData.name} onChange={e => setEnquiryData({...enquiryData, name: e.target.value})} />
-                <input type="email" placeholder="Email" required className="w-full p-6 rounded-3xl bg-white shadow-sm border border-slate-100 outline-none focus:ring-4 focus:ring-primary/10 transition-all" value={enquiryData.email} onChange={e => setEnquiryData({...enquiryData, email: e.target.value})} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <input type="email" placeholder="Email" required className="w-full p-6 rounded-3xl bg-white shadow-sm border border-slate-100 outline-none focus:ring-4 focus:ring-primary/10 transition-all" value={enquiryData.email} onChange={e => setEnquiryData({...enquiryData, email: e.target.value})} />
+                  <input type="tel" placeholder="Phone Number" required className="w-full p-6 rounded-3xl bg-white shadow-sm border border-slate-100 outline-none focus:ring-4 focus:ring-primary/10 transition-all" value={enquiryData.phone} onChange={e => setEnquiryData({...enquiryData, phone: e.target.value})} />
+                </div>
                 <textarea placeholder="Message" rows={4} className="w-full p-6 rounded-3xl bg-white shadow-sm border border-slate-100 outline-none focus:ring-4 focus:ring-primary/10 transition-all" value={enquiryData.message} onChange={e => setEnquiryData({...enquiryData, message: e.target.value})}></textarea>
                 <button type="submit" disabled={isSubmitting} className="btn-primary w-full py-6 flex items-center justify-center gap-4 text-lg uppercase tracking-widest">{isSubmitting ? <i className="fas fa-spinner fa-spin"></i> : <>Send Message <ArrowRight className="w-5 h-5" /></>}</button>
              </form>
