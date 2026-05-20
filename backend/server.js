@@ -14,9 +14,30 @@ dotenv.config();
 
 const app = express();
 
-// 1. DYNAMIC CORS - Mirror the request origin
+// 1. DYNAMIC CORS - Whitelist approach
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://jclsalem.netlify.app',
+  'https://jclsalem.netlify.app/',
+  'https://jc-demo.netlify.app',
+  'https://jc-demo.netlify.app/'
+].filter(Boolean);
+
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
@@ -32,17 +53,6 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 app.use(compression()); // Gzip compression
-
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://jclsalem.netlify.app',
-  'https://jclsalem.netlify.app/'
-].filter(Boolean);
-
-if (process.env.FRONTEND_URL) {
-  allowedOrigins.push(process.env.FRONTEND_URL);
-}
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
