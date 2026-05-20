@@ -173,6 +173,29 @@ app.get('/', (req, res) => {
   res.send(`JC Demo Backend is running. Status: ${dbStatus}`);
 });
 
+// 🏥 Health Check Endpoint
+app.get('/api/health', (req, res) => {
+  const states = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting',
+    99: 'uninitialized',
+  };
+  
+  const state = mongoose.connection.readyState;
+  
+  res.json({
+    status: state === 1 ? 'healthy' : 'unhealthy',
+    database: {
+      state: states[state] || 'unknown',
+      connected: state === 1,
+    },
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // 🔐 Login
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
