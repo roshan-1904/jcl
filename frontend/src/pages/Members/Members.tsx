@@ -8,6 +8,33 @@ import { ShieldCheck, Cpu } from 'lucide-react';
 // Register ScrollTrigger once
 gsap.registerPlugin(ScrollTrigger);
 
+const MemberNode = ({ member, role, color, isMain }: { member?: TeamMember, role: string, color: string, isMain?: boolean }) => (
+  <div className={`group relative flex flex-col items-center transition-all duration-700 ${isMain ? 'scale-110 z-30' : 'scale-100 z-20 hover:scale-105'}`}>
+    <div className="relative p-1 rounded-[3.5rem] bg-gradient-to-tr from-primary via-white/50 to-secondary shadow-xl overflow-hidden">
+      <div className="bg-white rounded-[3.2rem] p-8 md:p-10 flex flex-col items-center min-w-[280px] relative">
+        <div className={`absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r ${color}`}></div>
+        <div className="mb-8">
+           <div className="relative w-32 h-32 md:w-40 md:h-40">
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary/20 animate-spin-slow"></div>
+              <div className="absolute inset-2 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-slate-50">
+                 <img src={member?.image || 'https://via.placeholder.com/400x400?text=Leader'} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="" />
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-secondary flex items-center justify-center text-white border-2 border-white shadow-xl">
+                 <ShieldCheck className="w-5 h-5" />
+              </div>
+           </div>
+        </div>
+        <div className="text-center">
+           <p className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-2">{role}</p>
+           <h4 className="text-xl md:text-2xl font-black text-secondary tracking-tighter uppercase leading-tight line-clamp-1">{member?.name || 'Assigned Soon'}</h4>
+           <div className="w-8 h-1 bg-slate-100 mx-auto mt-4 rounded-full group-hover:w-16 group-hover:bg-primary transition-all duration-500"></div>
+        </div>
+      </div>
+    </div>
+    {!isMain && <div className="h-16 w-0.5 bg-gradient-to-b from-slate-200 to-transparent"></div>}
+  </div>
+);
+
 const Members = () => {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,33 +62,6 @@ const Members = () => {
     const hierarchyRoles = ['Advisor', 'Chairman', 'Event Manager', 'Finance', 'Sponsorship', 'Marketing', 'Logistic', 'Food'];
     return teamMembers.filter(m => !hierarchyRoles.some(r => m.role?.toLowerCase().includes(r.toLowerCase())));
   };
-
-  const MemberNode = ({ member, role, color, isMain }: { member?: TeamMember, role: string, color: string, isMain?: boolean }) => (
-    <div className={`group relative flex flex-col items-center transition-all duration-700 ${isMain ? 'scale-110 z-30' : 'scale-100 z-20 hover:scale-105'}`}>
-      <div className="relative p-1 rounded-[3.5rem] bg-gradient-to-tr from-primary via-white/50 to-secondary shadow-xl overflow-hidden">
-        <div className="bg-white rounded-[3.2rem] p-8 md:p-10 flex flex-col items-center min-w-[280px] relative">
-          <div className={`absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r ${color}`}></div>
-          <div className="mb-8">
-             <div className="relative w-32 h-32 md:w-40 md:h-40">
-                <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary/20 animate-spin-slow"></div>
-                <div className="absolute inset-2 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-slate-50">
-                   <img src={member?.image || 'https://via.placeholder.com/400x400?text=Leader'} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="" />
-                </div>
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-secondary flex items-center justify-center text-white border-2 border-white shadow-xl">
-                   <ShieldCheck className="w-5 h-5" />
-                </div>
-             </div>
-          </div>
-          <div className="text-center">
-             <p className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-2">{role}</p>
-             <h4 className="text-xl md:text-2xl font-black text-secondary tracking-tighter uppercase leading-tight line-clamp-1">{member?.name || 'Assigned Soon'}</h4>
-             <div className="w-8 h-1 bg-slate-100 mx-auto mt-4 rounded-full group-hover:w-16 group-hover:bg-primary transition-all duration-500"></div>
-          </div>
-        </div>
-      </div>
-      {!isMain && <div className="h-16 w-0.5 bg-gradient-to-b from-slate-200 to-transparent"></div>}
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-[#fcfcfc] pt-40 pb-32 px-4" ref={mainRef}>

@@ -69,23 +69,6 @@ const AdminDashboard = () => {
   // Form States (Legacy)
   const [newLegacyImage, setNewLegacyImage] = useState<LegacyImage>({ image: '', title: '' });
 
-  useEffect(() => {
-    loadAllData();
-    gsap.fromTo(mainRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'expo.out' });
-  }, []);
-
-  // Handle Tab Transitions
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    gsap.fromTo(".tab-content-reveal", 
-      { opacity: 0, y: 30 }, 
-      { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", delay: 0.1 }
-    );
-    setIsSidebarOpen(false);
-  }, [currentTab]);
-
   const loadAllData = () => {
     eventService.getEvents().then(res => setEvents(res.data)).catch(console.error);
     eventService.getPresidents().then(res => setPresidents(res.data)).catch(console.error);
@@ -94,6 +77,11 @@ const AdminDashboard = () => {
     eventService.getAboutContent().then(res => setAboutContent(res.data)).catch(console.error);
     eventService.getLegacyImages().then(res => setLegacyImages(res.data)).catch(console.error);
   };
+
+  useEffect(() => {
+    loadAllData();
+    gsap.fromTo(mainRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'expo.out' });
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'event' | 'member' | 'president' | 'about' | 'legacy') => {
     const file = e.target.files?.[0];

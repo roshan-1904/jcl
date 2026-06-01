@@ -4,9 +4,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight } from 'lucide-react';
 import { eventService } from '../../services/api';
-import aboutImg from '../../assets/image/ChatGPT Image Apr 21, 2026, 02_19_37 PM.png';
-import pastPresidentsImg from '../../assets/image/past_presidents_new (2).png';
-import officeBearersImg from '../../assets/image/office_bearers_new (1).png';
+import aboutImg from '../../assets/image/about-hero.png';
+import pastPresidentsImg from '../../assets/image/past-presidents.png';
+import officeBearersImg from '../../assets/image/office-bearers.png';
 
 // Register ScrollTrigger once
 gsap.registerPlugin(ScrollTrigger);
@@ -101,7 +101,7 @@ const Home: React.FC = () => {
     try {
       await eventService.addEnquiry(enquiryData);
       alert('Enquiry sent successfully!');
-      setEnquiryData({ name: '', email: '', phone: '', message: '' });
+      setEnquiryData({ name: '', email: '', phone: '', location: '', message: '' });
     } catch (error: any) {
       console.error('Enquiry Error:', error);
       const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Error sending enquiry.';

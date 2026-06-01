@@ -17,6 +17,7 @@ const app = express();
 // 1. DYNAMIC CORS - Whitelist approach
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://localhost:5174',
   'http://localhost:3000',
   'https://jclsalem.netlify.app',
   'https://jclsalem.netlify.app/',
@@ -113,6 +114,7 @@ const enquirySchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, index: true },
   phone: { type: String, required: true },
+  location: { type: String },
   message: { type: String, required: true },
   createdAt: { type: Date, default: Date.now, index: true }
 });

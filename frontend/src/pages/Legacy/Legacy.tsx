@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { eventService, LegacyImage } from '../../services/api';
-import pastPresidentsImg from '../../assets/image/past_presidents_new (2).png';
+import pastPresidentsImg from '../../assets/image/past-presidents.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
